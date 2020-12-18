@@ -6,7 +6,7 @@
 /*   By: sbashir <mi243@ya.tu>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 17:44:28 by sbashir           #+#    #+#             */
-/*   Updated: 2020/12/18 19:06:27 by sbashir          ###   ########.fr       */
+/*   Updated: 2020/12/18 20:26:04 by sbashir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	main(int argc, char **argv)
 	int	it;
 	bool	n;
 
-	n = !ft_strcmp(argv[1], "-n");
+	n = argc > 1 && !ft_strcmp(argv[1], "-n");
 	it = 1 + n;
 	while (it < argc)
 	{
