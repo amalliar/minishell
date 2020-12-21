@@ -85,6 +85,9 @@ help:
 	@echo "... fclean"
 	@echo "... re"
 .PHONY: help
+run: all
+	./$(NAME)
+.PHONY: run
 
 # Do not include dependency files if the current goal is
 # set to clean/fclean/re.
