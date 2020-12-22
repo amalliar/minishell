@@ -22,7 +22,15 @@ SRCDIR     := src
 OBJDIR     := .obj
 DEPDIR     := .dep
 
-SRCS       := src/main.c
+UTILS_SRCS := msg_exit.c
+UTILS_SRCS := $(addprefix utils/, $(UTILS_SRCS))
+
+SRCS       := main.c
+		#	  env_tools.c \
+			#  utils/msg_exit.c
+SRCS       := $(SRCS) $(UTILS_SRCS)
+SRCS  := $(addprefix src/, $(SRCS))
+
 OBJS       := $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 DEPS       := $(SRCS:$(SRCDIR)/%.c=$(DEPDIR)/%.d)
 
@@ -40,6 +48,7 @@ NOC        := \033[0m
 
 all: $(NAME)
 $(NAME): $(OBJS) $(LIBFT)
+	echo $(SRCS)
 	@echo -e "$(LGREEN)Linking executable $(NAME)$(NOC)"
 	$(CC) $(CFLAGS) $(INCLUDE) $(OBJS) $(LIBS) -o $@
 	@echo -e "Built target $(NAME)"
@@ -53,9 +62,9 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c $(DEPDIR)/%.d | $(OBJDIR) $(DEPDIR)
 	$(CC) $(CFLAGS) $(INCLUDE) -MMD -MF $(DEPDIR)/$*.tmp -c $< -o $@
 	@$(POST_COMPILE)
 $(OBJDIR):
-	@mkdir -p $(OBJDIR)
+	@mkdir -p $(dir $(OBJS))
 $(DEPDIR):
-	@mkdir -p $(DEPDIR)
+	@mkdir -p $(dir $(DEPS))
 $(DEPDIR)/%.d: ;
 .PRECIOUS: $(DEPDIR)/%.d
 
@@ -75,7 +84,7 @@ fclean: clean
 
 re:
 	$(MAKE) fclean
-	$(MAKE) bonus
+	$(MAKE) all
 .PHONY: re
 
 help:
