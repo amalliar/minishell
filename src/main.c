@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 03:33:51 by amalliar          #+#    #+#             */
-/*   Updated: 2020/12/14 03:34:46 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/10 21:05:12 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <error_tools.h>
@@ -17,6 +17,7 @@
 #include <process.h>
 #include <ft_list.h>
 
+/*
 extern char **g_environ;
 
 void testAll()
@@ -48,6 +49,7 @@ void preset(char **envp)
 {
 	init_environ(envp);
 }
+
 int main(int argc, char **argv, char **envp)
 {
 //	signal(SIGINT, SIG_IGN); //TODO : add /n when runnig blah blah blah
@@ -87,4 +89,88 @@ int main(int argc, char **argv, char **envp)
 	//	sleep(2);
 	//}
 	return 0;
+}
+*/
+
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <errno.h>
+#include "ft_stdio.h"
+#include "ft_list.h"
+#include "ft_string.h"
+#include "msh.h"
+#include "lexer.h"
+
+char	*g_msh_prompt = NULL;
+
+void	set_prompt(char *new_prompt)
+{
+	char	*new_prompt_dup;
+
+	if (!(new_prompt_dup = ft_strdup(new_prompt)))
+		exit_failure(MSH_VERSION": %s\n", strerror(errno));
+	if (g_msh_prompt)
+		free(g_msh_prompt);
+	g_msh_prompt = new_prompt_dup;
+}
+
+char	*get_prompt(void)
+{
+	if (g_msh_prompt)
+		return (g_msh_prompt);
+	exit_failure(MSH_VERSION": g_msh_prompt not set\n");
+	return (NULL);
+}
+
+char	**alloc_dynamic_envp(char **envp)
+{
+	int		i;
+	char	**envp_dup;
+
+	i = 0;
+	while (envp[i])
+		++i;
+	if (!(envp_dup = malloc(i * sizeof(char *))))
+		exit_failure(MSH_VERSION": %s\n", strerror(errno));
+	envp_dup[i--] = NULL;
+	while (i >= 0)
+	{
+		if (!(envp_dup[i] = ft_strdup(envp[i])))
+			exit_failure(MSH_VERSION": %s\n", strerror(errno));
+		--i;
+	}
+	return (envp_dup);
+}
+
+static void		read_loop_except(int ret)
+{
+	if (ret == 0)
+	{
+		// TODO: replace with msh_exit built-in.
+		ft_printf("\nexit\n");
+		exit(EXIT_SUCCESS);
+	}
+	exit_failure(MSH_VERSION": %s\n", strerror(errno));
+}
+
+int		main(int argc, char **argv, char **envp)
+{
+	int			ret;
+	char		*line;
+	t_token		*token_list;
+
+	envp = alloc_dynamic_envp(envp);
+	set_prompt(MSH_VERSION"$ ");
+	while (1)
+	{
+		ft_printf("%s", get_prompt());
+		if ((ret = ft_get_next_line(STDIN_FILENO, &line)) <= 0)
+			read_loop_except(ret);
+		token_list = lexer_proc(line);
+		free(line);
+		//exec_token_list() or need to build an AST first?
+		lexer_clear(&token_list);
+	}
+	return (0);
 }
