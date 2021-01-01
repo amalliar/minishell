@@ -14,130 +14,117 @@
 #include <ft_stdlib.h>
 #include "utils/msg_exit.h"
 #include "utils/ft_strar.h"
-
+#include <stdio.h>
 
 extern char **environ;
+static char **ft_env;
 static int initialized = 0;
 
-int init_environ()
+static int copy_env(int expand)
 {
 	size_t envlen;
 	char **envp;
 
-	if (initialized)
-		return (1);
 	envlen = strarr_len(environ);
-	if(!(envp = ft_calloc(sizeof(char *), envlen + 1)))
+	if(!(envp = ft_calloc(envlen + expand + 1,sizeof(char *))))
 		return (0);
 	while(envlen--)
 	{
-		if(!(envp[envlen] = ft_strdup(environ[envlen])))
+		if(!(envp[envlen] = ft_strdup((initialized ? ft_env : environ)[envlen])))
 			return (strarr_free(envp + envlen));
 	}
-	environ = envp;
-	initialized = 1;
-	return (0);
+	if(initialized)
+		strarr_free(ft_env);
+	ft_env = envp;
+	return (1);
 }
+
+int init_environ()
+{
+	if (initialized)
+		return (1);
+	initialized = copy_env(0);
+	return (initialized);
+}
+
+#include "ft_stdio.h"
 
 static char **findenv(const char *name)
 {
 	size_t namelen;
 	char **envp;
+	char *eq_char;
 
-	namelen = name - ft_strchr(name, '=');
-	namelen = namelen ? namelen : ft_strlen(name);
-	envp = environ;
-	while (*envp)
+	eq_char = ft_strchr(name, '=');
+	namelen = eq_char ? eq_char - name : ft_strlen(name);
+	envp = ft_env;
+	while (envp && *envp != NULL)
 	{
-		if (ft_strncmp(name, *envp, namelen))
+		printf("[%s\n]"	, *envp);
+		if (!ft_strncmp(name, *envp, namelen))
 			return envp;
 		envp++;
 	}
-
+//	write (2, "ЭТО ПРИНТФ БЕЗ КОТОРОГО ОШИБКА\n", 20);
+// TODO: WTF??? working with printf
 	return (0);
 }
+
+
 char *ft_getenv(const char *name)
 {
 	char *env;
+	char *val;
 
+	//printf("asdf: %s\n", name);
 	if (!(env = *findenv(name)))
-		return (0); //TODO: Better is empty string
-	return (ft_strchr(env, '=') + 1); //TODO: possible problems on realocation
+	{
+		//printf("asdf\n");
+		return (ft_strdup(""));
+	}
+	//printf("asdf: %s\n", name);
+	val = ft_strdup(ft_strchr(env, '=') + 1);
+	return (val);
 }
 
 int  ft_unsetenv(const char *name)
 {
 	char **envp;
 
-	msg_exit(initialized, "You need to initialize environ first");
+	msg_assert(initialized, "You need to initialize environ first");
 	if (!(envp = findenv(name)))
-		return (1);
+		return (0);
 	free(*envp);
 	while ((envp[0] = envp[1]))
 		envp++;
-	return (1); //TODO: What should be returned?
-}
-
-char *ft_setenv(const char *name, const char *value)
-{
-	char **envp;
-	msg_exit(initialized, "You need to initialize environ first");
-
-	envp = ft_calloc();
-	ft_unsetenv(name);
+	return (1);
 }
 
 char *ft_putenv(const char *string)
 {
+	char **envp;
+	size_t envlen;
 
+	msg_assert(initialized, "You need to initialize environ first");
+	msg_assert(string, "String is NULL");
+	if(!ft_unsetenv(string))
+		copy_env(1);
+	envlen = strarr_len(ft_env);
+	return (ft_env[envlen] = ft_strdup(string));
 }
 
 
-
-#ifdef TEST
-/*
-  * Stand-alone program for test purposes.
-  */
-
-/* printenv - display environment */
-
-static void printenv()
+char *ft_setenv(const char *name, const char *value)
 {
-    char  **envp;
+	char *tmp;
+	char *ret;
 
-    for (envp = environ; envp && *envp; envp++)
-	printf("%s\n", *envp);
+	msg_assert(name && value, "Pointers are NULL");
+	if(!(name = ft_strjoin(name, "=")))
+		return (0);
+	tmp = ft_strjoin(name, value);
+	ret = ft_putenv(tmp);
+	free(tmp);
+	free((char *)name);
+	return ret;
 }
-
-int     main(argc, argv)
-int     argc;
-char  	**argv;
-{
-    char   *cp;
-    int     changed = 0;
-
-    if (argc < 2) {
-	printf("usage: %s name[=value]...\n", argv[0]);
-	return (1);
-    }
-    while (--argc && *++argv) {
-	if (argv[0][0] == '-') {		/* unsetenv() test */
-	    unsetenv(argv[0] + 1);
-	    changed = 1;
-	} else if (strchr(argv[0], '=') == 0) {	/* getenv() test */
-	    cp = getenv(argv[0]);
-	    printf("%s: %s\n", argv[0], cp ? cp : "not found");
-	} else {				/* putenv() test */
-	    if (putenv(argv[0])) {
-		perror("putenv");
-		return (1);
-	    }
-	    changed = 1;
-	}
-    }
-    if (changed)
-	printenv();
-    return (0);
-}
-
-#endif /* TEST */

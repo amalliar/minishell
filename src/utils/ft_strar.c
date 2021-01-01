@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include <stdlib.h>
 
 int                                             strarr_free(char **str_arr)
 {
@@ -19,7 +20,7 @@ int                                             strarr_free(char **str_arr)
 	i = 0;
 	while (str_arr[i])
 		free(str_arr[i++]);
-	free(splitted);
+	free(str_arr);
 	return (0);
 }
 
