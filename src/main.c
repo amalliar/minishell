@@ -14,6 +14,9 @@
 #include <env_tools.h>
 #include <ft_stdio.h>
 
+#include <process.h>
+#include <ft_list.h>
+
 extern char **environ;
 void testAll()
 {
@@ -33,18 +36,29 @@ void testAll()
 	msg_assert(!ft_strcmp(ft_getenv("TEST"), "HELL"), "problem in getenv");
 	ft_unsetenv("TEST");
 	ft_getenv("sadf");
-	ft_printf("HI");
 	msg_assert(!ft_strcmp(ft_getenv("TEST"), ""),"problem in unsetenv");
 	msg_assert(!ft_strcmp(ft_getenv("PATH"), save_path), "problem in unsetenv or set env in PATH");
 	ft_unsetenv("TEST");
 	msg_assert(!ft_strcmp(ft_getenv("TEST"), ""),"problem in unsetenv (TEST)");
 }
 
-int		main(int argc, char **argv)
+
+int main(int argc, char **argv)
 {
 	testAll();
 	(void)argc;
 	(void)argv;
-	return (0);
-}
 
+	t_command command = {"/bin/cat" , argv, 0};
+	t_command command1 = {"/bin/cat" , argv, 0};
+	t_command command2 = {"/bin/cat" , argv, 0};
+
+	t_list **head = 0;
+
+	ft_lstadd_back(head,ft_lstnew(&command));
+	ft_lstadd_back(head,ft_lstnew(&command1));
+	ft_lstadd_back(head,ft_lstnew(&command2));
+//	g_prev_pipe = open("main.c", O_RDONLY);
+//	process_one(&command);
+	process(*head);
+}
