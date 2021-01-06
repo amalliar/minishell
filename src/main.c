@@ -49,16 +49,25 @@ int main(int argc, char **argv)
 	(void)argc;
 	(void)argv;
 
-	t_command command = {"/bin/cat" , argv, 0};
-	t_command command1 = {"/bin/cat" , argv, 0};
-	t_command command2 = {"/bin/cat" , argv, 0};
+	t_command command = {"/bin/yes", argv, 1, 0,0,0};
+	t_command command1 = {"/bin/cat", ft_split("cat -e", ' '), 1, 0,0,0};
+	t_command command2 = {"/bin/cat", ft_split("cat", ' '), 0,1,0,0, "test", "test1"};
+	t_command command3 = {"/bin/yes", argv, 1, 0,0,0};
+	t_command command4 = {"/bin/cat", ft_split("cat -e", ' '), 1, 0,0,0};
+	t_command command5 = {"/bin/head", ft_split("head", ' '), 0, 0,0,0};
 
-	t_list **head = 0;
 
-	ft_lstadd_back(head,ft_lstnew(&command));
-	ft_lstadd_back(head,ft_lstnew(&command1));
-	ft_lstadd_back(head,ft_lstnew(&command2));
-//	g_prev_pipe = open("main.c", O_RDONLY);
-//	process_one(&command);
-	process(*head);
+	t_list *head = ft_lstnew(&command);
+	ft_lstadd_back(&head, ft_lstnew(&command1));
+	ft_lstadd_back(&head, ft_lstnew(&command2));
+	ft_lstadd_back(&head, ft_lstnew(&command3));
+	ft_lstadd_back(&head, ft_lstnew(&command4));
+	ft_lstadd_back(&head, ft_lstnew(&command5));
+	process(head);
+
+	//while(1)
+	//{
+	//	ft_printf("hello\n");
+	//	sleep(2);
+	//}
 }

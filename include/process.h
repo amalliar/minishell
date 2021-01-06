@@ -21,8 +21,8 @@ typedef struct s_command
 	_Bool f_stdin;
 	_Bool f_stdout;
 	_Bool f_stdout_append;
-	char stdout;
-	char stdint;
+	char *new_stdout;
+	char *new_stdin;
 } t_command;
 
 int process(const t_list *commands);
