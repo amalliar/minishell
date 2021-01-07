@@ -15,6 +15,7 @@
 
 void	msg_exit(int i, char *msg);
 void	msg_assert(_Bool exp, char *msg);
-void	msg_arg_exit(int i, char *msg, char *problem);
+void	ft_perror(const char *msg);
+void 	error_check(int ret_of_func, const char *err_msg);
 
 #endif
