@@ -6,7 +6,7 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2021/01/02 03:24:05 by sbashir          ###   ########.fr        #
+#    Updated: 2021/01/07 19:21:24 by sbashir          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ DEPDIR     := .dep
 UTILS_SRCS := msg_exit.c ft_strar.c
 UTILS_SRCS := $(addprefix utils/, $(UTILS_SRCS))
 
-SRCS       := main.c env_tools.c
+SRCS       := main.c env_tools.c process.c
 SRCS       := $(SRCS) $(UTILS_SRCS)
 SRCS  := $(addprefix src/, $(SRCS))
 
