@@ -68,6 +68,8 @@ void child(const t_command *command, int *pipefd)
 		tmp_fd = open(command->new_stdin, O_RDONLY); //TODO: add open check
 		dup2move(tmp_fd, 0); // TODO: add check
 	}
+	if(check_biltin(command))
+		run_builtin;
 	execve(command->name, command->params, environ);
 	ERR_TEST;
 	exit(42);
@@ -80,58 +82,57 @@ void handle(int val)
 	exit(val);
 }
 
+int parent(const t_command *command, int *pipefd, pid_t pid)
+{
+	static pid_t pids[100];
+	int pid_it;
+	int	status;
+
+	pid_it = 0;
+	if(g_prev_pipe)
+		close(g_prev_pipe);
+	g_prev_pipe = 0;
+	pids[pid_it++ ] = pid;
+	if (command->pipe)
+	{
+		close(pipefd[1]);
+		g_prev_pipe = pipefd[0];
+	}
+	else
+	{
+		for (int i = 0;i < pid_it; i++)
+		{
+			waitpid(pids[i], &status, 0);
+		}
+		ft_memset(pids, 0, sizeof(pids));
+	}
+}
+
 int process(const t_list *commands)
 {
-	//signal(SIGPIPE, handle);
+	signal(SIGINT, handle);
 	signal(SIGSTOP, handle);
 	pid_t pid;
-	pid_t pids[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
 	int status;
 	int pipefd[2];
 	t_command *command;
 
-	//save_std();
-	int pid_it = 0;
-	while(commands)
+	while(commands && (command = commands->content))
 	{
-		command = commands->content;
-		if (command->pipe)
-			if (pipe(pipefd) == -1)
-			{
-				perror("pipe");
-				exit(EXIT_FAILURE);
-			}
-		pid = fork();
-
-		if (pid == -1)
+		if(!command->pipe && command->f_builtin)
 		{
-			perror("fork"); /* произошла ошибка */
-			exit(1); /*выход из родительского процесса*/
-		} else if (pid == 0) // Потомок
-		{
-			signal(SIGINT, handle);
-			child(command, pipefd);
-		} else //предок
-		{
-			if(g_prev_pipe)
-				close(g_prev_pipe);
-			g_prev_pipe = 0;
-			pids[pid_it++ ] = pid;
-			if (command->pipe)
-			{
-				close(pipefd[1]);
-				g_prev_pipe = pipefd[0];
-			}
-			else
-			{
-				for (int i = 0;i < pid_it;i++)
-				{
-					waitpid(pids[i], &status, 0);
-				}
-				ft_memset(pids, 0, sizeof(pids));
-			}
+			commands = commands->next;
+			continue;
 		}
+		if (command->pipe && pipe(pipefd) == -1) //perror("pipe");
+			exit(EXIT_FAILURE);
+		pid = fork();
+		if (pid == -1)
+			exit(EXIT_FAILURE); /*выход из родительского процесса*/
+		if (pid == 0) // Потомок
+			child(command, pipefd);
+		if (pid > 0) //Предок
+			parent(command, pipefd, pid);
 		commands = commands->next;
 	}
 	return 1;
