@@ -6,7 +6,7 @@
 /*   By: sbashir <mi243@ya.tu>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 17:44:28 by sbashir           #+#    #+#             */
-/*   Updated: 2020/12/18 20:26:04 by sbashir          ###   ########.fr       */
+/*   Updated: 2021/01/07 05:51:56 by sbashir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,12 @@
 int	main(int argc, char **argv)
 {
 	int	it;
-	bool	n;
+	bool	n_option;
 
-	n = argc > 1 && !ft_strcmp(argv[1], "-n");
-	it = 1 + n;
+	it = 1;
+	n_option = false;
+	while (it < argc && !ft_strcmp(argv[it], "-n") && it++)
+		n_option = true; 
 	while (it < argc)
 	{
 		ft_putstr(argv[it]);
