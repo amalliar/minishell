@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_main.c                                         :+:      :+:    :+:   */
+/*   pwd_main.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbashir <mi243@ya.tu>                      +#+  +:+       +#+        */
+/*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/18 17:44:28 by sbashir           #+#    #+#             */
-/*   Updated: 2020/12/18 20:19:40 by sbashir          ###   ########.fr       */
+/*   Created: 2020/12/14 03:33:51 by amalliar          #+#    #+#             */
+/*   Updated: 2021/01/08 13:20:28 by sbashir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <ft_string.h>
+#include <unistd.h>
 #include <ft_stdio.h>
-#include <stdbool.h>
+#include <stdio.h>
+#define DIRMAX 1024
 
-int	main(int argc, char **argv, char **envp)
+int		bi_pwd(int argc, char **argv, char **envp)
 {
-	while (*envp)
-	{
-		ft_putstr(*envp);
-		ft_putchar('\n');
-		envp++;
-	}
+	char dir[DIRMAX];
+	ft_printf("%s\n", getcwd(dir, DIRMAX));
 	return (0);
 }

@@ -14,12 +14,9 @@
 #include <ft_stdlib.h>
 #include <unistd.h>
 #include <process.h>
+#include <builtin.h>
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <errno.h>
-#include <string.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <fcntl.h>
@@ -29,11 +26,6 @@
 static int g_prev_pipe;
 extern char **environ;
 
-#define ERR_TEST \
-do                 {\
-if (!errno)\
-fprintf(stderr,"ERROR: %s %s:%d function:%s\n", strerror(errno),__FILE__, __LINE__, __FUNCTION__ );\
-} while (0)
 static void dup2move(int old_fd, int new_fd)
 {
 	errno = 0;
@@ -50,7 +42,7 @@ static void configure_redirection(const t_command *command, int *pipefd)
 		dup2move(g_prev_pipe, 0); //TODO:  fd leak? g_pipe == 0?!
 	if (command->pipe)
 	{
-		error_check(close(pipefd[0]), "close");
+		error_check(close(pipefd[0]), "bash: close");
 		dup2move(pipefd[1], 1);
 	}
 	if (command->f_stdout)
@@ -59,7 +51,7 @@ static void configure_redirection(const t_command *command, int *pipefd)
         ((command->f_stdout_append) ? O_APPEND : 0));
 		error_check( tmp_fd, command->new_stdin);
 		//TODO: new file has wrong user rights
-		dup2move(tmp_fd, 1); //TODO: Add check
+		dup2move(tmp_fd, 1);
 	}
 	if (command->f_stdin)
 	{
@@ -69,20 +61,20 @@ static void configure_redirection(const t_command *command, int *pipefd)
 	}
 }
 
-void child(const t_command *command, int *pipefd)
+void child(const t_command *command, int *pipefd, _Bool normal_builtin)
 {
-	int tmp_fd;
-
 	configure_redirection(command, pipefd);
-	//TODO : restore signal!!
-	errno = 0;
-	error_check(execve(command->name, command->params, environ), command->name);
-	exit(EXIT_SUCCESS);
+	if(check_builtin(command->name))
+		run_builtin(command->name, command->params, environ);
+	else
+		error_check(execve(command->name, command->params, environ), command->name);
+	//TODO: RESTORE FD!!!
+	exit(EXIT_SUCCESS); // for builtin
 }
 
 int parent(const t_command *command, int *pipefd, pid_t pid)
 {
-	static pid_t pids[100];
+	static pid_t pids[1024];
 	int pid_it;
 	int status;
 
@@ -93,7 +85,7 @@ int parent(const t_command *command, int *pipefd, pid_t pid)
 	pids[pid_it++] = pid;
 	if (command->pipe)
 	{
-		error_check(close(pipefd[1]), "close");
+		error_check(close(pipefd[1]), "bash: close");
 		g_prev_pipe = pipefd[0];
 	} else
 	{
@@ -106,30 +98,60 @@ int parent(const t_command *command, int *pipefd, pid_t pid)
 	return (0);
 }
 
+void save_fd(int *std_fds)
+{
+	int it;
+
+	it = 0;
+	if (std_fds[1])
+		return ;
+	while (it < 3)
+	{
+		error_check(std_fds[it] = dup(it), "save_fd: dup");
+		it++;
+	}
+}
+
+void load_fd(int *std_fds)
+{
+	int it;
+
+	it = 0;
+	while (it < 3)
+	{
+		error_check(dup2(std_fds[it], it), "load_fd: dup2");
+		it++;
+	}
+}
+
 int process(const t_list *commands)
 {
 	pid_t pid;
-	int status;
 	int pipefd[2];
+	static int std_fds[3];
 	t_command *command;
+	_Bool normal_builtin;
 
+	save_fd(std_fds);
 	while (commands && (command = commands->content))
 	{
-	//	if (!command->pipe && command->f_builtin)
-	//	{
-	//		commands = commands->next;
-	//		continue;
-	//	}
-		errno = 0; //TODO : maybe delete errno=0 becose we are testing func_ret
+		load_fd(std_fds);
+		normal_builtin = !command->pipe && !g_prev_pipe && check_builtin(command->name);
+		if (normal_builtin)
+		{
+			run_builtin(command->name, command->params, environ);
+			commands = commands->next;
+			continue;
+		}
+		errno = 0; //TODO : maybe delete errno=0 because we are testing func_ret
 		if (command->pipe)
 			error_check(pipe(pipefd), "pipe");
 		error_check(pid = fork(), "fork");
 		if (pid == 0) // Потомок
-			child(command, pipefd);
+			child(command, pipefd, normal_builtin);
 		if (pid > 0) //Предок
 			parent(command, pipefd, pid); // error we
 		commands = commands->next;
 	}
 	return (1);
 }
-

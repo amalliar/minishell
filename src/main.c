@@ -45,17 +45,18 @@ void testAll()
 
 int main(int argc, char **argv)
 {
-	signal(SIGINT, SIG_IGN); //TODO : add /n when runnig blah blah blah
+//	signal(SIGINT, SIG_IGN); //TODO : add /n when runnig blah blah blah
 	testAll();
 	(void)argc;
 	(void)argv;
 
 	t_command command = {"/usr/bin/yes", argv, 1, 0,0,0};
 	t_command command1 = {"/bin/cat", ft_split("cat -e", ' '), 1, 0,0,0};
-	t_command command2 = {"/bin/cat", ft_split("cat", ' '), 0,1,0,0, "test", "test1"};
+	t_command command2 = {"/bin/head", ft_split("head", ' '), 0,0,0,0, "test", "test1"};
 	t_command command3 = {"/usr/bin/yes", argv, 1, 0,0,0};
-	t_command command4 = {"/bin/cat", ft_split("cat -e", ' '), 1, 0,0,0};
-	t_command command5 = {"/usr/bin/head", ft_split("head", ' '), 0, 0,0,0};
+	t_command command4 = {"/bin/head", ft_split("head", ' '), 0, 0,0,0};
+	t_command command5 = {"echo", ft_split("echo HELLO_WORLD", ' '), 1, 0,0,0};
+	t_command command6 = {"/bin/cat", ft_split("cat -e", ' '), 0, 0,0,0};
 
 
 	t_list *head = ft_lstnew(&command);
@@ -64,15 +65,17 @@ int main(int argc, char **argv)
 	ft_lstadd_back(&head, ft_lstnew(&command3));
 	ft_lstadd_back(&head, ft_lstnew(&command4));
 	ft_lstadd_back(&head, ft_lstnew(&command5));
-//read line
-//parse line
+	ft_lstadd_back(&head, ft_lstnew(&command6));
+	//read line
+	//parse line
 	process(head);
-//write bash$:...
-// goto: read line
+	//write bash$:...
+	// goto: read line
 
 	//while(1)
 	//{
 	//	ft_printf("hello\n");
 	//	sleep(2);
 	//}
+	return 0;
 }

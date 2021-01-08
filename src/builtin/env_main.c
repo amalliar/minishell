@@ -1,22 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   env_main.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sbashir <mi243@ya.tu>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/14 03:33:51 by amalliar          #+#    #+#             */
-/*   Updated: 2020/12/14 03:34:46 by amalliar         ###   ########.fr       */
+/*   Created: 2020/12/18 17:44:28 by sbashir           #+#    #+#             */
+/*   Updated: 2021/01/08 13:16:00 by sbashir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <unistd.h>
-#include <stdio.h>
-#define DIRMAX 100
 
-int		main(int argc, char **argv)
+#include <ft_string.h>
+#include <ft_stdio.h>
+#include <stdbool.h>
+
+int	bi_env(int argc, char **argv, char **envp)
 {
-	char dir[DIRMAX];
-
-	printf("%s\n", getcwd(dir, DIRMAX)); //TODO: Delete ft_printf
+	while (*envp)
+	{
+		ft_putstr(*envp);
+		ft_putchar('\n');
+		envp++;
+	}
 	return (0);
 }

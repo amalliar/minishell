@@ -6,7 +6,7 @@
 /*   By: sbashir <mi243@ya.tu>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 17:44:28 by sbashir           #+#    #+#             */
-/*   Updated: 2021/01/07 05:51:56 by sbashir          ###   ########.fr       */
+/*   Updated: 2021/01/08 13:13:17 by sbashir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <ft_stdio.h>
 #include <stdbool.h>
 
-int	main(int argc, char **argv)
+int	bi_echo(int argc, char **argv, char **envp)
 {
 	int	it;
 	bool	n_option;
@@ -30,7 +30,7 @@ int	main(int argc, char **argv)
 			ft_putchar(' ');
 		it++;
 	}
-	if (!n)
+	if (!n_option)
 		ft_putchar('\n');
 	return (0);
 }
