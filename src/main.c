@@ -17,15 +17,15 @@
 #include <process.h>
 #include <ft_list.h>
 
-extern char **environ;
+extern char **g_environ;
+
 void testAll()
 {
 	char **envp;
 	char **envp_new;
 
-	envp = environ;
-	init_environ();
-	envp_new = environ;
+	envp = g_environ;
+	envp_new = g_environ;
 	ft_getenv("sadf");
 	while (*envp || *envp_new)
 		msg_assert(!ft_strcmp(*(envp++), *(envp_new++)), "init_environ error");
@@ -42,10 +42,14 @@ void testAll()
 	msg_assert(!ft_strcmp(ft_getenv("TEST"), ""),"problem in unsetenv (TEST)");
 }
 
-
-int main(int argc, char **argv)
+void preset(char **envp)
+{
+	init_environ(envp);
+}
+int main(int argc, char **argv, char **envp)
 {
 //	signal(SIGINT, SIG_IGN); //TODO : add /n when runnig blah blah blah
+	preset(envp);
 	testAll();
 	(void)argc;
 	(void)argv;
@@ -53,9 +57,12 @@ int main(int argc, char **argv)
 	t_command command = {"/usr/bin/yes", argv, 1, 0,0,0};
 	t_command command1 = {"/bin/cat", ft_split("cat -e", ' '), 1, 0,0,0};
 	t_command command2 = {"/bin/head", ft_split("head", ' '), 0,0,0,0, "test", "test1"};
+
+
 	t_command command3 = {"/usr/bin/yes", argv, 1, 0,0,0};
 	t_command command4 = {"/bin/head", ft_split("head", ' '), 0, 0,0,0};
-	t_command command5 = {"echo", ft_split("echo HELLO_WORLD", ' '), 1, 0,0,0};
+
+	t_command command5 = {"echo", ft_split("echo -n -n -n -n HELLO_WORLD", ' '), 1, 0,0,0};
 	t_command command6 = {"/bin/cat", ft_split("cat -e", ' '), 0, 0,0,0};
 
 

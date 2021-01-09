@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int init_environ();
+int init_environ(char **envp);
 char *ft_getenv(const char *name);
 int  ft_unsetenv(const char *name);
 char *ft_putenv(const char *string);
