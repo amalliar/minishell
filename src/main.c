@@ -9,7 +9,7 @@
 /*   Updated: 2020/12/14 03:34:46 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "utils/msg_exit.h"
+#include <error_tools.h>
 #include <ft_string.h>
 #include <env_tools.h>
 #include <ft_stdio.h>
@@ -27,19 +27,21 @@ void testAll()
 	envp = g_environ;
 	envp_new = g_environ;
 	ft_getenv("sadf");
-	while (*envp || *envp_new)
-		msg_assert(!ft_strcmp(*(envp++), *(envp_new++)), "init_environ error");
-	char *save_path = ft_getenv("PATH");
+//	while (*envp || *envp_new)
+//		msg_assert(!ft_strcmp(*(envp++), *(envp_new++)), "init_environ error");
+	char *save_path = ft_strdup(ft_getenv("PATH"));
+	ft_printf("[%s]\n", ft_getenv("PATH"));
 	msg_assert(!ft_strcmp(ft_putenv("TEST=HELLO"), "TEST=HELLO"), "problem in putenv");
 	msg_assert(!ft_strcmp(ft_getenv("TEST"), "HELLO"), "problem in getenv");
 	msg_assert(!ft_strcmp(ft_setenv("TEST", "HELL"), "TEST=HELL"), "problem in setenv");
 	msg_assert(!ft_strcmp(ft_getenv("TEST"), "HELL"), "problem in getenv");
 	ft_unsetenv("TEST");
 	ft_getenv("sadf");
-	msg_assert(!ft_strcmp(ft_getenv("TEST"), ""),"problem in unsetenv");
+	ft_printf("[%s]\n{%s}\n",save_path, ft_getenv("PATH"));
+	msg_assert(ft_getenv("TEST") ==  NULL,"problem in unsetenv");
 	msg_assert(!ft_strcmp(ft_getenv("PATH"), save_path), "problem in unsetenv or set env in PATH");
 	ft_unsetenv("TEST");
-	msg_assert(!ft_strcmp(ft_getenv("TEST"), ""),"problem in unsetenv (TEST)");
+	msg_assert(ft_getenv("TEST") == NULL,"problem in unsetenv (TEST)");
 }
 
 void preset(char **envp)

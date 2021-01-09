@@ -23,7 +23,6 @@ typedef struct s_command
 	_Bool f_stdout_append;
 	char *new_stdout;
 	char *new_stdin;
-	int builtin;
 } t_command;
 
 int process(const t_list *commands);

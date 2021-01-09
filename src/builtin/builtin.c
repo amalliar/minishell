@@ -13,8 +13,8 @@
 #include <builtin.h>
 #include <ft_string.h>
 
-#include "../utils/msg_exit.h"
-#include "../utils/ft_strar.h"
+#include <error_tools.h>
+#include <other_tools.h>
 
 #define BUILTINS_SIZE 3 // TODO: Remove it if u can!
 static t_builtin builtins[] = {

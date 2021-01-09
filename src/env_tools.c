@@ -13,8 +13,8 @@
 #include <ft_string.h>
 #include <ft_stdlib.h>
 #include <errno.h>
-#include "utils/msg_exit.h"
-#include "utils/ft_strar.h"
+#include <error_tools.h>
+#include <other_tools.h>
 
 char **g_environ;
 static int g_initialized = 0;
@@ -75,7 +75,7 @@ char			*ft_getenv(const char *name)
 	msg_assert(g_initialized, "Use init_environ first");
 	if (!(env = findenv(name)))
 		return (NULL);
-	val = ft_strchr(*env, '=');
+	val = ft_strchr(*env, '=') + 1;
 	return (val);
 }
 

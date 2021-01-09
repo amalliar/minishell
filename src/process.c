@@ -21,10 +21,10 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <ft_string.h>
-#include "utils/msg_exit.h"
+#include <error_tools.h>
 
 static int g_prev_pipe;
-extern char **environ;
+extern char **g_environ;
 
 static void dup2move(int old_fd, int new_fd)
 {
@@ -65,9 +65,9 @@ void child(const t_command *command, int *pipefd, _Bool normal_builtin)
 {
 	configure_redirection(command, pipefd);
 	if(check_builtin(command->name))
-		run_builtin(command->name, command->params, environ);
+		run_builtin(command->name, command->params, g_environ);
 	else
-		error_check(execve(command->name, command->params, environ), command->name);
+		error_check(execve(command->name, command->params, g_environ), command->name);
 	//TODO: RESTORE FD!!!
 	exit(EXIT_SUCCESS); // for builtin
 }
@@ -139,7 +139,7 @@ int process(const t_list *commands)
 		normal_builtin = !command->pipe && !g_prev_pipe && check_builtin(command->name);
 		if (normal_builtin)
 		{
-			run_builtin(command->name, command->params, environ);
+			run_builtin(command->name, command->params, g_environ);
 			commands = commands->next;
 			continue;
 		}
