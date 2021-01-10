@@ -12,20 +12,21 @@
 
 #ifndef PROCESS_H
 # define PROCESS_H
-#include <ft_list.h>
-typedef struct s_command
-{
-	char *name;
-	char **params;
-	_Bool pipe;
-	_Bool f_stdin;
-	_Bool f_stdout;
-	_Bool f_stdout_append;
-	char *new_stdout;
-	char *new_stdin;
-} t_command;
 
-int process(const t_list *commands);
-void process_one(const t_command *command);
+# include <ft_list.h>
+
+typedef struct		s_command
+{
+	char			*name;
+	char			**params;
+	_Bool			pipe;
+	_Bool			f_stdin;
+	_Bool			f_stdout;
+	_Bool			f_stdout_append;
+	char			*new_stdout;
+	char			*new_stdin;
+}					t_command;
+
+int					process(const t_list *commands);
 
 #endif

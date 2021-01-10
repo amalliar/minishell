@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef OTHER_TOOLS_H 
-# define OTHER_TOOLS_H 
+#ifndef OTHER_TOOLS_H
+# define OTHER_TOOLS_H
 
 int			strarr_free(char **str_arr);
 size_t		strarr_len(char **str_arr);
