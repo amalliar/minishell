@@ -111,7 +111,7 @@ char			*ft_setenv(const char *name, const char *value)
 	char *ret;
 
 	msg_assert(g_initialized, "Use init_environ first");
-	msg_assert(value, "Pointers are NULL"); //TODO ADD
+	msg_assert(value, "Pointers are NULL"); //TODO: possibility value == ""
 	if (!(name = ft_strjoin(name, "=")))
 		return (0);
 	tmp = ft_strjoin(name, value);

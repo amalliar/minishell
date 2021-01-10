@@ -28,9 +28,9 @@ void	msg_assert(_Bool exp, char *msg)
 		msg_exit(EXIT_FAILURE, msg);
 }
 
-void ft_perror(const char *msg)
+void	ft_perror(const char *msg)
 {
-	if(msg && *msg)
+	if (msg && *msg)
 	{
 		ft_putstr_fd((char *)msg, 2);
 		ft_putstr_fd(": ", 2);
@@ -39,10 +39,10 @@ void ft_perror(const char *msg)
 	ft_putstr_fd("\n", 2);
 }
 
-void error_check(int ret_of_func, const char *err_msg)
+void	error_check(int ret_of_func, const char *err_msg)
 {
 	if (ret_of_func != -1)
-		return;
+		return ;
 	ft_perror(err_msg);
 	exit(ret_of_func);
 }
