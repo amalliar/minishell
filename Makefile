@@ -6,7 +6,7 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2021/01/10 03:55:20 by sbashir          ###   ########.fr        #
+#    Updated: 2021/01/10 16:08:11 by sbashir          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRCDIR     := src
 OBJDIR     := .obj
 DEPDIR     := .dep
 
-BUILTIN_SRCS := builtin.c env_main.c echo_main.c pwd_main.c
+BUILTIN_SRCS := builtin.c env_main.c echo_main.c pwd_main.c cd_main.c
 BUILTIN_SRCS := $(addprefix builtin/, $(BUILTIN_SRCS))
 
 UTILS_SRCS := error_tools.c strarr_tools.c

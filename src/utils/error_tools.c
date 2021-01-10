@@ -46,3 +46,9 @@ void	error_check(int ret_of_func, const char *err_msg)
 	ft_perror(err_msg);
 	exit(ret_of_func);
 }
+
+int		putstr_err(char *msg, int ret)
+{
+	ft_putstr_fd(msg, STDERR_FILENO);
+	return (ret);
+}

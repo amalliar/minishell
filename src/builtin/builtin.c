@@ -16,37 +16,38 @@
 #include <error_tools.h>
 #include <other_tools.h>
 
-#define BUILTINS_SIZE 3 // TODO: Remove it if u can!
-static t_builtin builtins[] = {
-		{"echo", bi_echo},
-		{"pwd", bi_pwd},
-		{"env", bi_env}
+#define BUILTINS_SIZE 4 // TODO: Remove it if u can!
+
+static t_builtin g_builtins[] = { \
+								{"echo", bi_echo}, \
+								{"pwd", bi_pwd}, \
+								{"env", bi_env}, \
+								{"cd", bi_cd}
 };
 
 //static const int g_builtins_size = sizeof(builtins)/ sizeof(t_builtin);
 
-const t_builtin * check_builtin(char *command)
+const t_builtin		*check_builtin(char *command)
 {
 	int i;
 
 	i = 0;
 	while (i < BUILTINS_SIZE)
 	{
-		if(!ft_strcmp(builtins[i].name, command))
-			return (&(builtins[i]));
+		if (!ft_strcmp(g_builtins[i].name, command))
+			return (&(g_builtins[i]));
 		i++;
 	}
 	return (NULL);
 }
 
-int run_builtin(char *command, char **argv, char **envp)
+int					run_builtin(char *command, char **argv, char **envp)
 {
-	const t_builtin *bi;
-	int		ret;
+	const t_builtin	*bi;
+	int				ret;
 
 	bi = check_builtin(command);
 	msg_assert(bi, "Not builtin command");
 	ret = bi->func(strarr_len(argv), argv, envp);
-	//TODO: ADD RESTORE FD!!!!!!
 	return (ret);
 }

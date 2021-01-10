@@ -36,10 +36,11 @@ static void		dup2move(int old_fd, int new_fd)
 
 static void		configure_redirection(const t_command *command, int *pipefd)
 {
+	//TODO: notworking on builtin
 	int			tmp_fd;
 
 	if (g_prev_pipe)
-		dup2move(g_prev_pipe, 0); //TODO:  fd leak? g_pipe == 0?!
+		dup2move(g_prev_pipe, 0);
 	if (command->pipe)
 	{
 		error_check(close(pipefd[0]), "bash: close");
@@ -48,9 +49,8 @@ static void		configure_redirection(const t_command *command, int *pipefd)
 	if (command->f_stdout)
 	{
 		tmp_fd = open(command->new_stdout, O_WRONLY | O_CREAT | \
-		((command->f_stdout_append) ? O_APPEND : 0));
+		((command->f_stdout_append) ? O_APPEND : 0), 0664);
 		error_check(tmp_fd, command->new_stdin);
-		//TODO: new file has wrong user rights
 		dup2move(tmp_fd, 1);
 	}
 	if (command->f_stdin)
@@ -68,7 +68,7 @@ void			child(const t_command *command, int *pipefd)
 		run_builtin(command->name, command->params, g_environ);
 	else
 		error_check(execve(command->name, command->params, g_environ), command->name);
-	exit(EXIT_SUCCESS); // for builtin
+	exit(EXIT_SUCCESS); // TODO: maybe move upper for error check
 }
 
 int				parent(const t_command *command, int *pipefd, pid_t pid)

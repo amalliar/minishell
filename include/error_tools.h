@@ -13,9 +13,10 @@
 #ifndef ERROR_TOOLS_H
 # define ERROR_TOOLS_H
 
-void	msg_exit(int i, char *msg);
 void	msg_assert(_Bool exp, char *msg);
 void	ft_perror(const char *msg);
+void	msg_exit(int i, char *msg);
 void	error_check(int ret_of_func, const char *err_msg);
+int		putstr_err(char *msg, int ret);
 
 #endif
