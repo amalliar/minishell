@@ -10,12 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include <stdlib.h>
 
-int                                             strarr_free(char **str_arr)
+int				strarr_free(char **str_arr)
 {
-	size_t	i;
+	size_t		i;
 
 	i = 0;
 	while (str_arr[i])
@@ -24,9 +23,9 @@ int                                             strarr_free(char **str_arr)
 	return (0);
 }
 
-size_t  										strarr_len(char **str_arr)
+size_t			strarr_len(char **str_arr)
 {
-	size_t  len;
+	size_t		len;
 
 	len = 0;
 	while (*(str_arr++))

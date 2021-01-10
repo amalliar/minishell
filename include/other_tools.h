@@ -1,20 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msg_exit.h                                         :+:      :+:    :+:   */
+/*   other_tools.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbashir <mi243@ya.ru>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/14 21:21:00 by sbashir           #+#    #+#             */
-/*   Updated: 2020/10/14 21:21:00 by sbashir          ###   ########.fr       */
+/*   Created: 2020/12/22 22:02:00 by sbashir           #+#    #+#             */
+/*   Updated: 2021/01/10 02:43:45 by sbashir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINIRT_MSG_EXIT_H
-# define MINIRT_MSG_EXIT_H
+#ifndef OTHER_TOOLS_H
+# define OTHER_TOOLS_H
 
-void	msg_exit(int i, char *msg);
-void	msg_assert(_Bool exp, char *msg);
-void	msg_arg_exit(int i, char *msg, char *problem);
+int			strarr_free(char **str_arr);
+size_t		strarr_len(char **str_arr);
 
 #endif

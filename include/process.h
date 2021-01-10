@@ -1,26 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_main.c                                         :+:      :+:    :+:   */
+/*   process.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbashir <mi243@ya.tu>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/18 17:44:28 by sbashir           #+#    #+#             */
-/*   Updated: 2020/12/18 20:19:40 by sbashir          ###   ########.fr       */
+/*   Created: 2021/01/02 03:38:28 by sbashir           #+#    #+#             */
+/*   Updated: 2021/01/02 03:39:28 by sbashir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_string.h>
-#include <ft_stdio.h>
-#include <stdbool.h>
+#ifndef PROCESS_H
+# define PROCESS_H
 
-int	main(int argc, char **argv, char **envp)
+# include <ft_list.h>
+
+typedef struct		s_command
 {
-	while (*envp)
-	{
-		ft_putstr(*envp);
-		ft_putchar('\n');
-		envp++;
-	}
-	return (0);
-}
+	char			*name;
+	char			**params;
+	_Bool			pipe;
+	_Bool			f_stdin;
+	_Bool			f_stdout;
+	_Bool			f_stdout_append;
+	char			*new_stdout;
+	char			*new_stdin;
+}					t_command;
+
+int					process(const t_list *commands);
+
+#endif

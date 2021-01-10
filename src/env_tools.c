@@ -13,10 +13,10 @@
 #include <ft_string.h>
 #include <ft_stdlib.h>
 #include <errno.h>
-#include "utils/msg_exit.h"
-#include "utils/ft_strar.h"
+#include <error_tools.h>
+#include <other_tools.h>
 
-extern char **environ;
+char **g_environ;
 static int g_initialized = 0;
 
 static int		copy_env(int expand)
@@ -24,23 +24,24 @@ static int		copy_env(int expand)
 	size_t	envlen;
 	char	**envp;
 
-	envlen = strarr_len(environ);
+	envlen = strarr_len(g_environ);
 	if (!(envp = ft_calloc(envlen + expand + 1, sizeof(char *))))
 		return (0);
 	while (envlen--)
 	{
-		if (!(envp[envlen] = ft_strdup(environ[envlen])))
+		if (!(envp[envlen] = ft_strdup(g_environ[envlen])))
 			return (strarr_free(envp + envlen));
 	}
 	if (g_initialized)
-		strarr_free(environ);
-	environ = envp;
+		strarr_free(g_environ);
+	g_environ = envp;
 	return (1);
 	errno;
 }
 
-int				init_environ(void)
+int				init_environ(char **envp)
 {
+	g_environ = envp;
 	if (g_initialized)
 		return (1);
 	g_initialized = copy_env(0);
@@ -53,9 +54,10 @@ static char		**findenv(const char *name)
 	char		**envp;
 	char		*eq_char;
 
+	msg_assert(g_initialized, "Use init_environ first");
 	eq_char = ft_strchr(name, '=');
 	namelen = eq_char ? eq_char - name : ft_strlen(name);
-	envp = environ;
+	envp = g_environ;
 	while (envp && *envp != NULL)
 	{
 		if (!ft_strncmp(name, *envp, namelen))
@@ -70,9 +72,10 @@ char			*ft_getenv(const char *name)
 	char **env;
 	char *val;
 
+	msg_assert(g_initialized, "Use init_environ first");
 	if (!(env = findenv(name)))
-		return (ft_strdup(""));
-	val = ft_strdup(ft_strchr(*env, '=') + 1);
+		return (NULL);
+	val = ft_strchr(*env, '=') + 1;
 	return (val);
 }
 
@@ -80,7 +83,7 @@ int				ft_unsetenv(const char *name)
 {
 	char **envp;
 
-	init_environ();
+	msg_assert(g_initialized, "Use init_environ first");
 	if (!(envp = findenv(name)))
 		return (0);
 	free(*envp);
@@ -94,12 +97,12 @@ char			*ft_putenv(const char *string)
 	char	**envp;
 	size_t	envlen;
 
-	init_environ();
+	msg_assert(g_initialized, "Use init_environ first");
 	msg_assert(string, "String is NULL");
 	if (!ft_unsetenv(string))
 		copy_env(1);
-	envlen = strarr_len(environ);
-	return (environ[envlen] = ft_strdup(string));
+	envlen = strarr_len(g_environ);
+	return (g_environ[envlen] = ft_strdup(string));
 }
 
 char			*ft_setenv(const char *name, const char *value)
@@ -107,7 +110,8 @@ char			*ft_setenv(const char *name, const char *value)
 	char *tmp;
 	char *ret;
 
-	msg_assert(name && value, "Pointers are NULL");
+	msg_assert(g_initialized, "Use init_environ first");
+	msg_assert(value, "Pointers are NULL"); //TODO: possibility value == ""
 	if (!(name = ft_strjoin(name, "=")))
 		return (0);
 	tmp = ft_strjoin(name, value);

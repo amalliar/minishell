@@ -6,13 +6,13 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2021/01/02 03:24:05 by sbashir          ###   ########.fr        #
+#    Updated: 2021/01/10 03:55:20 by sbashir          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SHELL      := /bin/sh
 CC         := clang
-CFLAGS     := -Wall -Wextra -fdiagnostics-color -pipe \
+CFLAGS     :=  -fdiagnostics-color -pipe \
               -march=native -O2 -flto
 INCLUDE    := -I./include -I./libft/include
 NAME       := minishell
@@ -22,12 +22,15 @@ SRCDIR     := src
 OBJDIR     := .obj
 DEPDIR     := .dep
 
-UTILS_SRCS := msg_exit.c ft_strar.c
+BUILTIN_SRCS := builtin.c env_main.c echo_main.c pwd_main.c
+BUILTIN_SRCS := $(addprefix builtin/, $(BUILTIN_SRCS))
+
+UTILS_SRCS := error_tools.c strarr_tools.c
 UTILS_SRCS := $(addprefix utils/, $(UTILS_SRCS))
 
-SRCS       := main.c env_tools.c
-SRCS       := $(SRCS) $(UTILS_SRCS)
-SRCS  := $(addprefix src/, $(SRCS))
+SRCS       := main.c env_tools.c process.c
+SRCS       := $(SRCS) $(UTILS_SRCS) $(BUILTIN_SRCS)
+SRCS  	   := $(addprefix src/, $(SRCS))
 
 OBJS       := $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 DEPS       := $(SRCS:$(SRCDIR)/%.c=$(DEPDIR)/%.d)
