@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <error_tools.h>
 #include <other_tools.h>
+#include <ft_ctype.h>
 
 char **g_environ;
 static int g_initialized = 0;
@@ -99,6 +100,8 @@ char			*ft_putenv(const char *string)
 
 	msg_assert(g_initialized, "Use init_environ first");
 	msg_assert(string, "String is NULL");
+	if (!ft_isalpha(string[0]))
+		return (NULL);
 	if (!ft_unsetenv(string))
 		copy_env(1);
 	envlen = strarr_len(g_environ);

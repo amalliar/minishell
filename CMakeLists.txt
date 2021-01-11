@@ -4,7 +4,7 @@ project(cmsh C)
 set(CMAKE_C_STANDARD 99)
 
 add_executable(cmsh src/main.c src/env_tools.c src/utils/strarr_tools.c src/utils/error_tools.c src/process.c src/builtin/builtin.c
-        src/builtin/echo_main.c src/builtin/env_main.c src/builtin/pwd_main.c src/builtin/cd_main.c)
+        src/builtin/echo_main.c src/builtin/env_main.c src/builtin/pwd_main.c src/builtin/cd_main.c src/builtin/unset_main.c src/builtin/export_main.c src/builtin/exit_main.c)
 include_directories(libft/include include libft)
 find_library(LIBFT_G ft "${CMAKE_SOURCE_DIR}/libft/")
 target_link_libraries(cmsh ${LIBFT_G})

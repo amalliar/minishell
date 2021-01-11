@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_main.c                                         :+:      :+:    :+:   */
+/*   unset_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbashir <mi243@ya.tu>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/18 17:44:28 by sbashir           #+#    #+#             */
-/*   Updated: 2021/01/08 13:16:00 by sbashir          ###   ########.fr       */
+/*   Created: 2021/01/10 17:33:49 by sbashir           #+#    #+#             */
+/*   Updated: 2021/01/10 17:33:51 by sbashir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_string.h>
-#include <ft_stdio.h>
-#include <stdbool.h>
+#include <env_tools.h>
 
-int	bi_env(int argc, char **argv, char **envp)
+int bi_unset(int argc, char **argv, char **envp)
 {
-	while (*envp)
+	int it;
+
+	it = 1;
+	while (it < argc)
 	{
-		ft_putstr(*envp);
-		ft_putchar('\n'); //TODO : _ // problem
-		envp++;
+		ft_unsetenv(argv[it]);
+		it++;
 	}
 	return (0);
 }

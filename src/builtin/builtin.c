@@ -16,12 +16,15 @@
 #include <error_tools.h>
 #include <other_tools.h>
 
-#define BUILTINS_SIZE 4 // TODO: Remove it if u can!
+#define BUILTINS_SIZE 7 // TODO: Remove it if u can!
 
 static t_builtin g_builtins[] = { \
+								{"export", bi_export}, \
 								{"echo", bi_echo}, \
+								{"unset", bi_unset}, \
 								{"pwd", bi_pwd}, \
 								{"env", bi_env}, \
+								{"env", bi_exit}, \
 								{"cd", bi_cd}
 };
 

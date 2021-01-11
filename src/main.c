@@ -50,31 +50,32 @@ void preset(char **envp)
 }
 int main(int argc, char **argv, char **envp)
 {
-//	signal(SIGINT, SIG_IGN); //TODO : add /n when runnig blah blah blah
+//	signal(SIGINT, SIG_IGN); //TODO : add /n when
+//	 runnig blah blah blah
 	preset(envp);
-	testAll();
+	//testAll();
 	(void)argc;
 	(void)argv;
 
-	t_command command = {"/usr/bin/yes", argv, 1, 0,0,0};
-	t_command command1 = {"/bin/cat", ft_split("cat -e", ' '), 1, 0,0,0};
-	t_command command2 = {"/bin/head", ft_split("head", ' '), 0,0,0,0, "test", "test1"};
+	t_command command = {"cd", ft_split("cd", ' '), 0, 0,0,0};
+	t_command command1 = {"env", ft_split("env", ' '), 1, 0,0,0};
+	t_command command2 = {"/usr/bin/cat", ft_split("grep", ' '), 0,0,0,0, "test", "test1"};
 
 
-	t_command command3 = {"/usr/bin/yes", argv, 1, 0,0,0};
+	t_command command3 = {"pwd", argv, 0, 0,0,0};
 	t_command command4 = {"/bin/head", ft_split("head", ' '), 0, 0,0,0};
 
 	t_command command5 = {"echo", ft_split("echo -n -n -n -n HELLO_WORLD", ' '), 1, 0,0,0};
-	t_command command6 = {"/bin/cat", ft_split("cat -e", ' '), 0, 0,0,0};
+	t_command command6 = {"/bin/cat", ft_split("cat -e", ' '), 0, 0,1,0,"new_file"};
 
 
 	t_list *head = ft_lstnew(&command);
 	ft_lstadd_back(&head, ft_lstnew(&command1));
 	ft_lstadd_back(&head, ft_lstnew(&command2));
 	ft_lstadd_back(&head, ft_lstnew(&command3));
-	ft_lstadd_back(&head, ft_lstnew(&command4));
-	ft_lstadd_back(&head, ft_lstnew(&command5));
-	ft_lstadd_back(&head, ft_lstnew(&command6));
+	//ft_lstadd_back(&head, ft_lstnew(&command4));
+	//ft_lstadd_back(&head, ft_lstnew(&command5));
+	//ft_lstadd_back(&head, ft_lstnew(&command6));
 	//read line
 	//parse line
 	process(head);
