@@ -25,6 +25,7 @@
 
 static int g_prev_pipe;
 extern char **g_environ;
+unsigned char g_question;
 
 static void		dup2move(int old_fd, int new_fd)
 {
@@ -36,7 +37,6 @@ static void		dup2move(int old_fd, int new_fd)
 
 static void		configure_redirection(const t_command *command, int *pipefd)
 {
-	//TODO: notworking on builtin
 	int			tmp_fd;
 
 	if (g_prev_pipe)
@@ -61,14 +61,20 @@ static void		configure_redirection(const t_command *command, int *pipefd)
 	}
 }
 
-void			child(const t_command *command, int *pipefd)
+
+
+
+int 			child(const t_command *command, int *pipefd)
 {
+	int ret;
+
+	ret = EXIT_SUCCESS;
 	configure_redirection(command, pipefd);
 	if (check_builtin(command->name))
-		run_builtin(command->name, command->params, g_environ);
+		ret = run_builtin(command->name, command->params, g_environ);
 	else
 		error_check(execve(command->name, command->params, g_environ), command->name);
-	exit(EXIT_SUCCESS); // TODO: maybe move upper for error check
+	exit(ret);
 }
 
 int				parent(const t_command *command, int *pipefd, pid_t pid)
@@ -93,9 +99,10 @@ int				parent(const t_command *command, int *pipefd, pid_t pid)
 		it = 0;
 		while (it < pid_it)
 			waitpid(pids[it++], &status, 0);
+		g_question = status;
 		ft_memset(pids, 0, sizeof(pids));
 	}
-	return (0);
+	return (status);
 }
 
 void			save_fd(int *std_fds)
@@ -143,7 +150,6 @@ int				process(const t_list *commands)
 			commands = commands->next;
 			continue;
 		}
-		errno = 0; //TODO : maybe delete errno=0 because we are testing func_ret
 		if (command->pipe)
 			error_check(pipe(pipefd), "pipe");
 		error_check(pid = fork(), "fork");
