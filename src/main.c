@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 03:33:51 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/10 21:05:12 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/15 06:38:40 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <error_tools.h>
@@ -159,6 +159,7 @@ int		main(int argc, char **argv, char **envp)
 	int			ret;
 	char		*line;
 	t_token		*token_list;
+	t_list		*command_list;
 
 	envp = alloc_dynamic_envp(envp);
 	set_prompt(MSH_VERSION"$ ");
@@ -167,10 +168,15 @@ int		main(int argc, char **argv, char **envp)
 		ft_printf("%s", get_prompt());
 		if ((ret = ft_get_next_line(STDIN_FILENO, &line)) <= 0)
 			read_loop_except(ret);
-		token_list = lexer_proc(line);
-		free(line);
-		//exec_token_list() or need to build an AST first?
-		lexer_clear(&token_list);
+		while (line)
+		{
+			token_list = lexer_proc(&line);
+			command_list = parser_proc(token_list);
+			if (process(command_list) != 0)
+				; // print some error message and continue
+			lexer_clear(&token_list);
+			parser_clear(&command_list);
+		}
 	}
 	return (0);
 }

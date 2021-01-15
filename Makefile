@@ -6,7 +6,7 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2021/01/10 21:03:45 by amalliar         ###   ########.fr        #
+#    Updated: 2021/01/15 06:38:55 by amalliar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,10 +25,10 @@ DEPDIR     := .dep
 BUILTIN_SRCS := builtin.c env_main.c echo_main.c pwd_main.c
 BUILTIN_SRCS := $(addprefix builtin/, $(BUILTIN_SRCS))
 
-UTILS_SRCS := error_tools.c strarr_tools.c
+UTILS_SRCS := error_tools.c strarr_tools.c exit_failure.c
 UTILS_SRCS := $(addprefix utils/, $(UTILS_SRCS))
 
-SRCS       := main.c env_tools.c process.c
+SRCS       := main.c env_tools.c process.c lexer.c parser.c
 SRCS       := $(SRCS) $(UTILS_SRCS) $(BUILTIN_SRCS)
 SRCS  	   := $(addprefix src/, $(SRCS))
 

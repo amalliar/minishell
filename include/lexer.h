@@ -10,7 +10,6 @@ enum					e_lexer_states
 
 enum					e_token_types
 {
-	TT_SEMICOLON = ';',
 	TT_PIPE = '|',
 	TT_LEFT_AB = '<',
 	TT_RIGHT_AB = '>',
@@ -27,7 +26,7 @@ typedef struct 			s_token
 	struct s_token		*next;
 }						t_token;
 
-t_token		*lexer_proc(char *line);
+t_token		*lexer_proc(char **line);
 void		lexer_clear(t_token **token_list);
 
 #endif
