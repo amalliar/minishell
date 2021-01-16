@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 18:23:55 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/15 06:22:26 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/16 07:04:51 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,41 +68,87 @@ void		cut_processed_part(char **line, int line_idx)
 	*line = remainder;
 }
 
+static void		append_tokens(t_token **tok_current, char **word_list)
+{
+	t_token		*temp_tok;
+	int			tok_size;
+
+
+	if (!tok_current || !*tok_current || !word_list || !*word_list)
+		exit_failure(MSH_VERSION": append_tokens() got a NULL pointer.\n");
+	temp_tok = *tok_current;
+	while (*word_list)
+	{
+		tok_size = ft_strlen(*word_list);
+		temp_tok->next = alloc_new_token(tok_size);
+		temp_tok = temp_tok->next;
+		temp_tok->data = *word_list;
+		++word_list;
+	}
+	*tok_current = temp_tok;
+}
+
+static void		expand_token(t_token *tok_current, int *tok_idx, char *word)
+{
+	char	*buff;
+	int		buff_size;
+	int		word_size;
+
+	if (!tok_current || !word)
+		exit_failure(MSH_VERSION": expand_token() got a NULL pointer.\n");
+	word_size = ft_strlen(word);
+	buff_size = ft_strlen(tok_current->data) + word_size;
+	if (!(buff = malloc(buff_size)))
+		exit_failure(MSH_VERSION": %s\n", strerror(errno));
+	ft_memcpy(buff, tok_current->data, *tok_idx);
+	ft_memcpy(buff + *tok_idx, word, word_size);
+	free(tok_current->data);
+	tok_current->data = buff;
+	*tok_idx += word_size;
+}
+
 void		env_substitute(t_token **tok_current, int *tok_idx, char *line, int *line_idx, int lexer_state)
 {
-	int		tok_size;
-	int		var_idx;
-	char	*var;
-	char	*value;
+	char	c;
+	char	*evar;
+	char	*eval;
+	char	**tokens;
+	char	*ifs;
+	int		evar_size;
+	int		evar_idx;
 
-	tok_size = ft_strlen(line + *line_idx);
-	var_idx = 0;
-	if (!(var = malloc(tok_size + 1)))
+	if (!tok_current || !*tok_current || !line || !line_idx)
+		exit_failure(MSH_VERSION": env_substitute() got a NULL pointer.\n");
+	evar_size = ft_strlen(line + line_idx + 1);
+	if (!(evar = malloc(evar_size)))
 		exit_failure(MSH_VERSION": %s\n", strerror(errno));
-	while (*line && !ft_isspace(line[*line_idx]) || (lexer_state == LS_NORMAL && ft_strchr("$;|<>", line[*line_idx])))
+	evar_idx = 0;
+	if (!(ifs = ft_getenv("IFS")))
+		ifs = " \t\n";
+	while ((c = line[*line_idx]))
 	{
-		var[var_idx++] = line[*line_idx];
 		++*line_idx;
+		if (c == '$' || ft_strchr(ifs, c) || (lexer_state == LS_NORMAL && ft_strchr(";|<>", c)))
+		{
+			evar[evar_idx] = '\0';
+			break ;
+		}
+		evar[evar_idx++] = c;
 	}
-	var[var_idx] = '\0';
-
-	/*
-	value = get_env(var);
-	if (value)
+	if ((eval = ft_getenv(evar)))
 	{
 		if (lexer_state == LS_NORMAL)
 		{
-			finish_current_token(&tok_current, &tok_idx, tok_size - line_idx);
-			append_tokens_from_string(tok_current, value);
+			if (!(tokens = ft_split(eval, ifs)))
+				exit_failure(MSH_VERSION": %s\n", strerror(errno));
+			append_tokens(tok_current, tokens);
+			strarr_free(tokens);
 		}
 		else
-		{
-
-		}
+			expand_token(*tok_current, tok_idx, eval);
+		free(eval);
 	}
-	free(value);
-	*/
-	free(var);
+	free(evar);
 }
 
 t_token		*lexer_proc(char **line)
@@ -116,7 +162,7 @@ t_token		*lexer_proc(char **line)
 	t_token		*tok_current;
 
 	if (!line)
-		exit_failure(MSH_VERSION": lexer input line is NULL\n");
+		exit_failure(MSH_VERSION": lexer_proc() got a NULL pointer.\n");
 	lexer_state = LS_NORMAL;
 	tok_size = ft_strlen(*line) + 1;
 	tok_list = alloc_new_token(tok_size);
@@ -142,6 +188,7 @@ t_token		*lexer_proc(char **line)
 			}
 			else if (c == '$')
 			{
+				finish_current_token(&tok_current, &tok_idx, tok_size - line_idx);
 				env_substitute(&tok_current, &tok_idx, *line, &line_idx, lexer_state);
 			}
 			else if (c == '|')
@@ -194,9 +241,7 @@ t_token		*lexer_proc(char **line)
 				tok_idx = 0;
 			}
 			else if (c == '$')
-			{
 				env_substitute(&tok_current, &tok_idx, *line, &line_idx, lexer_state);
-			}
 			else
 			{
 				(tok_current->data)[tok_idx++] = c;
