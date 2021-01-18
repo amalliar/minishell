@@ -6,14 +6,14 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2021/01/15 06:38:55 by amalliar         ###   ########.fr        #
+#    Updated: 2021/01/18 08:31:22 by amalliar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SHELL      := /bin/sh
 CC         := clang
-CFLAGS     :=  -fdiagnostics-color -pipe \
-              -march=native -O2 -flto
+CFLAGS     :=  -fdiagnostics-color -g -pipe
+              #-march=native -O2 -flto
 INCLUDE    := -I./include -I./libft/include
 NAME       := minishell
 LIBFT      := ./libft/libft.a

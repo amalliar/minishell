@@ -6,24 +6,26 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/06 23:06:02 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/16 07:38:26 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/19 11:05:11 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_string.h"
-#define		ST_OUT_OF_WORD	0
-#define		ST_IN_WORD		1
+#define ST_OUT_OF_WORD	0
+#define ST_IN_WORD		1
 
 /*
 ** Allocates (with malloc) and returns an array of strings obtained by
-** splitting 'str' using characters from the string ifs as delimiters. 
+** splitting 'str' using characters from the string ifs as delimiters.
 ** The array must be ended by a NULL pointer.
 */
 
 static size_t	get_word_count(const char *str, const char *ifs)
 {
 	int		parse_state;
+	size_t	count;
 
+	count = 0;
 	parse_state = ST_OUT_OF_WORD;
 	while (*str)
 	{
@@ -61,11 +63,14 @@ static size_t	get_word_size(const char *str, const char *ifs)
 
 	size = 0;
 	while (*str && !ft_strchr(ifs, *str))
+	{
+		++str;
 		++size;
+	}
 	return (size);
 }
 
-static char		*get_next_word(char **str, const char *ifs)
+static char		*get_next_word(const char **str, const char *ifs)
 {
 	char		*word;
 	size_t		word_size;
@@ -87,7 +92,7 @@ char			**ft_split(const char *str, const char *ifs)
 	size_t		word_count;
 	size_t		i;
 
-	if (str == NULL || ifs == NULL (i = 0))
+	if (str == NULL || ifs == NULL)
 		return (NULL);
 	word_count = get_word_count(str, ifs);
 	if (!(word_tab = (char **)malloc((word_count + 1) * sizeof(char *))))

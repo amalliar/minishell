@@ -1,0 +1,58 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/a3c87ab5/
+BUILTINS_SIZE	builtin/builtin.c	/^#define BUILTINS_SIZE /;"	d	file:
+DIRMAX	builtin/pwd_main.c	/^#define DIRMAX /;"	d	file:
+alloc_new_token	lexer.c	/^static t_token		*alloc_new_token(size_t size)$/;"	f	typeref:typename:t_token *	file:
+append_tokens	lexer.c	/^static void		append_tokens(t_token **tok_current, char **word_list)$/;"	f	typeref:typename:void	file:
+bi_echo	builtin/echo_main.c	/^int	bi_echo(int argc, char **argv, char **envp)$/;"	f	typeref:typename:int
+bi_env	builtin/env_main.c	/^int	bi_env(int argc, char **argv, char **envp)$/;"	f	typeref:typename:int
+bi_pwd	builtin/pwd_main.c	/^int		bi_pwd(int argc, char **argv, char **envp)$/;"	f	typeref:typename:int
+builtins	builtin/builtin.c	/^static t_builtin builtins[] = {$/;"	v	typeref:typename:t_builtin[]	file:
+check_builtin	builtin/builtin.c	/^const t_builtin * check_builtin(char *command)$/;"	f	typeref:typename:const t_builtin *
+child	process.c	/^void			child(const t_command *command, int *pipefd)$/;"	f	typeref:typename:void
+cmd_destroy	parser.c	/^void			cmd_destroy(void *cmd_)$/;"	f	typeref:typename:void
+configure_redirection	process.c	/^static void		configure_redirection(const t_command *command, int *pipefd)$/;"	f	typeref:typename:void	file:
+copy_env	env_tools.c	/^static int		copy_env(int expand)$/;"	f	typeref:typename:int	file:
+cut_processed_part	lexer.c	/^void		cut_processed_part(char **line, int line_idx)$/;"	f	typeref:typename:void
+dup2move	process.c	/^static void		dup2move(int old_fd, int new_fd)$/;"	f	typeref:typename:void	file:
+env_substitute	lexer.c	/^void		env_substitute(t_token **tok_current, int *tok_idx, char *line, int *line_idx, int lexer_s/;"	f	typeref:typename:void
+error_check	utils/error_tools.c	/^void	error_check(int ret_of_func, const char *err_msg)$/;"	f	typeref:typename:void
+exit_failure	utils/exit_failure.c	/^void			exit_failure(char *format, ...)$/;"	f	typeref:typename:void
+expand_token	lexer.c	/^static void		expand_token(t_token *tok_current, int *tok_idx, char *word)$/;"	f	typeref:typename:void	file:
+findenv	env_tools.c	/^static char		**findenv(const char *name)$/;"	f	typeref:typename:char **	file:
+finish_current_token	lexer.c	/^static void		finish_current_token(t_token **tok_current, int *tok_idx, int tok_size)$/;"	f	typeref:typename:void	file:
+ft_getenv	env_tools.c	/^char			*ft_getenv(const char *name)$/;"	f	typeref:typename:char *
+ft_perror	utils/error_tools.c	/^void	ft_perror(const char *msg)$/;"	f	typeref:typename:void
+ft_putenv	env_tools.c	/^char			*ft_putenv(const char *string)$/;"	f	typeref:typename:char *
+ft_setenv	env_tools.c	/^char			*ft_setenv(const char *name, const char *value)$/;"	f	typeref:typename:char *
+ft_unsetenv	env_tools.c	/^int				ft_unsetenv(const char *name)$/;"	f	typeref:typename:int
+g_environ	env_tools.c	/^char **g_environ;$/;"	v	typeref:typename:char **
+g_initialized	env_tools.c	/^static int g_initialized = 0;$/;"	v	typeref:typename:int	file:
+g_msh_prompt	main.c	/^char	*g_msh_prompt = NULL;$/;"	v	typeref:typename:char *
+g_prev_pipe	process.c	/^static int g_prev_pipe;$/;"	v	typeref:typename:int	file:
+get_prompt	main.c	/^char	*get_prompt(void)$/;"	f	typeref:typename:char *
+init_environ	env_tools.c	/^int				init_environ(char **envp)$/;"	f	typeref:typename:int
+lexer_clear	lexer.c	/^void		lexer_clear(t_token *token_list)$/;"	f	typeref:typename:void
+lexer_proc	lexer.c	/^t_token		*lexer_proc(char **line)$/;"	f	typeref:typename:t_token *
+load_fd	process.c	/^void			load_fd(int *std_fds)$/;"	f	typeref:typename:void
+main	main.c	/^int		main(int argc, char **argv, char **envp)$/;"	f	typeref:typename:int
+msg_assert	utils/error_tools.c	/^void	msg_assert(_Bool exp, char *msg)$/;"	f	typeref:typename:void
+msg_exit	utils/error_tools.c	/^void	msg_exit(int i, char *msg)$/;"	f	typeref:typename:void
+parent	process.c	/^int				parent(const t_command *command, int *pipefd, pid_t pid)$/;"	f	typeref:typename:int
+parse_format	utils/exit_failure.c	/^static void		parse_format(char **format, va_list *ap)$/;"	f	typeref:typename:void	file:
+parser_clear	parser.c	/^void			parser_clear(t_list **command_list)$/;"	f	typeref:typename:void
+parser_proc	parser.c	/^t_list			*parser_proc(t_token *token_list)$/;"	f	typeref:typename:t_list *
+print_token_list	main.c	/^static void		print_token_list(t_token *token_list)$/;"	f	typeref:typename:void	file:
+process	process.c	/^int				process(const t_list *commands)$/;"	f	typeref:typename:int
+read_loop_except	main.c	/^static void		read_loop_except(int ret)$/;"	f	typeref:typename:void	file:
+run_builtin	builtin/builtin.c	/^int run_builtin(char *command, char **argv, char **envp)$/;"	f	typeref:typename:int
+save_fd	process.c	/^void			save_fd(int *std_fds)$/;"	f	typeref:typename:void
+set_prompt	main.c	/^void	set_prompt(char *new_prompt)$/;"	f	typeref:typename:void
+strarr_free	utils/strarr_tools.c	/^int				strarr_free(char **str_arr)$/;"	f	typeref:typename:int
+strarr_len	utils/strarr_tools.c	/^size_t			strarr_len(char **str_arr)$/;"	f	typeref:typename:size_t
