@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 18:23:55 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/20 10:58:08 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/22 14:40:50 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,10 @@
 #include "msh.h"
 #include "lexer.h"
 #include "ft_string.h"
+#include "ft_stdio.h"
 #include "env_tools.h"
 #include "error_tools.h"
 #include "other_tools.h"
-
-// TODO: make g_ifs into an env variable, so it can be passed to subshells.
-char 				*g_ifs = " \t\n";
 
 static t_token		*alloc_new_token(size_t size)
 {
@@ -129,6 +127,7 @@ void				env_substitute(t_token **tok_current, int *tok_idx, char *line, int *lin
 	char	c;
 	char	*evar;
 	char	*eval;
+	char	*ifs;
 	char	**tokens;
 	int		evar_size;
 	int		evar_idx;
@@ -143,7 +142,7 @@ void				env_substitute(t_token **tok_current, int *tok_idx, char *line, int *lin
 	while (1)
 	{
 		c = line[*line_idx];
-		if (ft_strchr(";|<>$\"\'", c) || ft_strchr(g_ifs, c))
+		if (ft_strchr(" ;|<>$\"\'", c))
 		{
 			evar[evar_idx] = '\0';
 			break ;
@@ -155,7 +154,9 @@ void				env_substitute(t_token **tok_current, int *tok_idx, char *line, int *lin
 	{
 		if (lexer_state == LS_NORMAL)
 		{
-			if (!(tokens = ft_split(eval, g_ifs)))
+			if (!(ifs = ft_getenv("IFS")))
+				ifs = " \t\n";
+			if (!(tokens = ft_split(eval, ifs)))
 				exit_failure(MSH_VERSION": %s\n", strerror(errno));
 			append_tokens(tok_current, tok_idx, ft_strlen(line) - *line_idx, tokens);
 			strarr_free(tokens);
@@ -231,12 +232,20 @@ t_token				*lexer_proc(char **line)
 					(tok_current->data)[tok_idx++] = '>';
 				}
 			}
-			else if (ft_strchr(g_ifs, c))
+			else if (c == ' ')
 				finish_current_token(&tok_current, &tok_idx, tok_size - line_idx);
 			else if (c == ';')
 			{
 				finish_current_token(&tok_current, &tok_idx, tok_size - line_idx);
 				cut_processed_part(line, line_idx);
+				if (tok_list->type == TT_NULL)
+				{
+					ft_printf(MSH_VERSION": syntax error near unexpected token `;'\n");
+					lexer_clear(tok_list);
+					free(*line);
+					*line = NULL;
+					return (NULL);
+				}
 				return (tok_list);
 			}
 			else

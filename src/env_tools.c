@@ -6,7 +6,7 @@
 /*   By: sbashir <mi243@ya.ru>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 17:56:00 by sbashir           #+#    #+#             */
-/*   Updated: 2020/12/22 17:02:41 by sbashir          ###   ########.fr       */
+/*   Updated: 2021/01/22 14:00:44 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <error_tools.h>
 #include <other_tools.h>
+#include <env_tools.h>
 
 char **g_environ;
 static int g_initialized = 0;
@@ -45,6 +46,8 @@ int				init_environ(char **envp)
 	if (g_initialized)
 		return (1);
 	g_initialized = copy_env(0);
+	if (!ft_getenv("IFS"))
+		ft_setenv("IFS", " \t\n");
 	return (g_initialized);
 }
 
