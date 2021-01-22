@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/24 07:19:51 by amalliar          #+#    #+#             */
-/*   Updated: 2020/10/13 17:43:47 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/18 08:09:02 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 # include <stddef.h>
 # include <stdlib.h>
 
-char		**ft_split(const char *str, char c);
+char		**ft_split(const char *str, const char *ifs);
 char		*ft_strchr(const char *str, int c);
 char		*ft_strdup(const char *str);
 char		*ft_strjoin(const char *str1, const char *str2);

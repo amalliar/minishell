@@ -6,85 +6,152 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 03:33:51 by amalliar          #+#    #+#             */
-/*   Updated: 2020/12/14 03:34:46 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/22 13:24:04 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <error_tools.h>
-#include <ft_string.h>
-#include <env_tools.h>
-#include <ft_stdio.h>
 
-#include <process.h>
-#include <ft_list.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 
-extern char **g_environ;
+#include "msh.h"
+#include "lexer.h"
+#include "parser.h"
+#include "ft_stdio.h"
+#include "ft_list.h"
+#include "ft_string.h"
+#include "env_tools.h"
+#include "error_tools.h"
+#include "process.h"
 
-void testAll()
+char			*g_msh_prompt = NULL;
+
+void			set_prompt(char *new_prompt)
 {
-	char **envp;
-	char **envp_new;
+	char	*new_prompt_dup;
 
-	envp = g_environ;
-	envp_new = g_environ;
-	ft_getenv("sadf");
-//	while (*envp || *envp_new)
-//		msg_assert(!ft_strcmp(*(envp++), *(envp_new++)), "init_environ error");
-	char *save_path = ft_strdup(ft_getenv("PATH"));
-	ft_printf("[%s]\n", ft_getenv("PATH"));
-	msg_assert(!ft_strcmp(ft_putenv("TEST=HELLO"), "TEST=HELLO"), "problem in putenv");
-	msg_assert(!ft_strcmp(ft_getenv("TEST"), "HELLO"), "problem in getenv");
-	msg_assert(!ft_strcmp(ft_setenv("TEST", "HELL"), "TEST=HELL"), "problem in setenv");
-	msg_assert(!ft_strcmp(ft_getenv("TEST"), "HELL"), "problem in getenv");
-	ft_unsetenv("TEST");
-	ft_getenv("sadf");
-	ft_printf("[%s]\n{%s}\n",save_path, ft_getenv("PATH"));
-	msg_assert(ft_getenv("TEST") ==  NULL,"problem in unsetenv");
-	msg_assert(!ft_strcmp(ft_getenv("PATH"), save_path), "problem in unsetenv or set env in PATH");
-	ft_unsetenv("TEST");
-	msg_assert(ft_getenv("TEST") == NULL,"problem in unsetenv (TEST)");
+	if (!(new_prompt_dup = ft_strdup(new_prompt)))
+		exit_failure(MSH_VERSION": %s\n", strerror(errno));
+	if (g_msh_prompt)
+		free(g_msh_prompt);
+	g_msh_prompt = new_prompt_dup;
 }
 
-void preset(char **envp)
+char			*get_prompt(void)
 {
-	init_environ(envp);
+	if (g_msh_prompt)
+		return (g_msh_prompt);
+	exit_failure(MSH_VERSION": g_msh_prompt not set\n");
+	return (NULL);
 }
-int main(int argc, char **argv, char **envp)
+
+static void		read_loop_except(int ret)
 {
-//	signal(SIGINT, SIG_IGN); //TODO : add /n when runnig blah blah blah
-	preset(envp);
-	testAll();
-	(void)argc;
-	(void)argv;
+	if (ret == 0)
+	{
+		// TODO: replace with msh_exit built-in.
+		ft_printf("\nexit\n");
+		exit(EXIT_SUCCESS);
+	}
+	exit_failure(MSH_VERSION": %s\n", strerror(errno));
+}
 
-	t_command command = {"/usr/bin/yes", argv, 1, 0,0,0};
-	t_command command1 = {"/bin/cat", ft_split("cat -e", ' '), 1, 0,0,0};
-	t_command command2 = {"/bin/head", ft_split("head", ' '), 0,0,0,0, "test", "test1"};
+// TODO: remove from final version.
+static void		print_token_list(t_token *token_list)
+{
+	while (token_list)
+	{
+		ft_printf("[%s]", token_list->data);
+		if (token_list->type == TT_PIPE)
+			ft_printf("[%s]\n", "TT_PIPE");
+		else if (token_list->type == TT_LEFT_AB)
+			ft_printf("[%s]\n", "TT_LEFT_AB");
+		else if (token_list->type == TT_RIGHT_AB)
+			ft_printf("[%s]\n", "TT_RIGHT_AB");
+		else if (token_list->type == TT_RIGHT_DAB)
+			ft_printf("[%s]\n", "TT_RIGHT_DAB");
+		else if (token_list->type == TT_WORD)
+			ft_printf("[%s]\n", "TT_WORD");
+		else if (token_list->type == TT_NULL)
+			ft_printf("[%s]\n", "TT_NULL");
+		token_list = token_list->next;
+	}
+}
 
+// TODO: remove from final version.
+static void		print_params(char **params)
+{
+	int		count;
 
-	t_command command3 = {"/usr/bin/yes", argv, 1, 0,0,0};
-	t_command command4 = {"/bin/head", ft_split("head", ' '), 0, 0,0,0};
+	count = 0;
+	while (*params)
+		ft_printf("arg_%d [%s]\n", count++, *params++);
+}
 
-	t_command command5 = {"echo", ft_split("echo -n -n -n -n HELLO_WORLD", ' '), 1, 0,0,0};
-	t_command command6 = {"/bin/cat", ft_split("cat -e", ' '), 0, 0,0,0};
+static void		print_command_list(t_list *command_list)
+{
+	t_command		*cmd;
+	int				cmd_idx;
+	static int		batch_idx = 0;
 
+	cmd_idx = 0;
+	while (command_list)
+	{
+		cmd = command_list->content;
+		if (!cmd_idx)
+			ft_printf("-------------------- NEXT_BATCH --------------------\n", batch_idx++);
+		ft_printf("CMD_%d\n", cmd_idx++);
+		if (cmd->name)
+			ft_printf("name [%s]\n", cmd->name);
+		if (cmd->params)
+			print_params(cmd->params);
+		if (cmd->f_stdin)
+			ft_printf("< [%s]\n", cmd->new_stdin);
+		if (cmd->f_stdout)
+			ft_printf("> [%s]\n", cmd->new_stdout);
+		if (cmd->f_stdout_append)
+			ft_printf(">> [%s]\n", cmd->new_stdout);
+		if (cmd->pipe)
+			ft_printf("pipe\n");
+		ft_printf("\n");
+		if (!command_list->next)
+			ft_printf("\n");
+		command_list = command_list->next;
+	}
+}
 
-	t_list *head = ft_lstnew(&command);
-	ft_lstadd_back(&head, ft_lstnew(&command1));
-	ft_lstadd_back(&head, ft_lstnew(&command2));
-	ft_lstadd_back(&head, ft_lstnew(&command3));
-	ft_lstadd_back(&head, ft_lstnew(&command4));
-	ft_lstadd_back(&head, ft_lstnew(&command5));
-	ft_lstadd_back(&head, ft_lstnew(&command6));
-	//read line
-	//parse line
-	process(head);
-	//write bash$:...
-	// goto: read line
+int				main(int argc, char **argv, char **envp)
+{
+	int			ret;
+	char		*line;
+	t_token		*token_list;
+	t_list		*command_list;
 
-	//while(1)
-	//{
-	//	ft_printf("hello\n");
-	//	sleep(2);
-	//}
-	return 0;
+	if (!init_environ(envp))
+		exit_failure(MSH_VERSION": %s\n", strerror(errno));
+	set_prompt(MSH_VERSION"$ ");
+	while (1)
+	{
+		ft_printf("%s", get_prompt());
+		if ((ret = ft_get_next_line(STDIN_FILENO, &line)) <= 0)
+			read_loop_except(ret);
+		while (line)
+		{
+			if ((token_list = lexer_proc(&line)))
+			{
+				//print_token_list(token_list);
+				if ((command_list = parser_proc(token_list)))
+				{
+					print_command_list(command_list);
+					/*
+					if (process(command_list) != 0)
+						; // print some error message and continue
+					*/
+					parser_clear(&command_list);
+				}
+				lexer_clear(token_list);
+			}
+		}
+	}
+	return (0);
 }
