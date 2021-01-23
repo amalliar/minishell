@@ -16,6 +16,7 @@
 #include <error_tools.h>
 #include <other_tools.h>
 #include <ft_ctype.h>
+#include <env_tools.h>
 
 char **g_environ;
 static int g_initialized = 0;
@@ -46,6 +47,8 @@ int				init_environ(char **envp)
 	if (g_initialized)
 		return (1);
 	g_initialized = copy_env(0);
+	if (!ft_getenv("IFS"))
+		ft_setenv("IFS", " \t\n");
 	return (g_initialized);
 }
 

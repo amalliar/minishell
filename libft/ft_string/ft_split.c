@@ -6,45 +6,45 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/06 23:06:02 by amalliar          #+#    #+#             */
-/*   Updated: 2020/05/24 09:21:02 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/19 11:05:11 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_string.h"
+#define ST_OUT_OF_WORD	0
+#define ST_IN_WORD		1
 
 /*
-** Allocates (with malloc) and returns an array of strings
-** obtained by splitting 'str' using the character 'c' as
-** a delimiter. The array must be ended by a NULL pointer.
+** Allocates (with malloc) and returns an array of strings obtained by
+** splitting 'str' using characters from the string ifs as delimiters.
+** The array must be ended by a NULL pointer.
 */
 
-static size_t	get_word_count(const char *str, char c)
+static size_t	get_word_count(const char *str, const char *ifs)
 {
-	char		*sep;
-	size_t		count;
+	int		parse_state;
+	size_t	count;
 
 	count = 0;
-	while (c != '\0' && (sep = ft_strchr(str, c)) != NULL)
+	parse_state = ST_OUT_OF_WORD;
+	while (*str)
 	{
-		if (sep - str != 0)
-			++count;
-		str = sep + 1;
+		if (ft_strchr(ifs, *str))
+		{
+			if (parse_state == ST_IN_WORD)
+			{
+				parse_state = ST_OUT_OF_WORD;
+				++count;
+			}
+		}
+		else
+			parse_state = ST_IN_WORD;
+		++str;
 	}
-	return ((*str == '\0') ? count : count + 1);
+	return (count + (parse_state == ST_IN_WORD));
 }
 
-static int		add_last_word(const char *str, char **word_tab, size_t i)
-{
-	size_t		word_len;
-
-	word_len = ft_strlen(str);
-	if (!(word_tab[i] = (char *)malloc(word_len + 1)))
-		return (1);
-	ft_memcpy(word_tab[i], str, word_len + 1);
-	return (0);
-}
-
-static char		**clear_tab(char **word_tab)
+static void		clear_word_tab(char **word_tab)
 {
 	size_t		i;
 
@@ -55,34 +55,55 @@ static char		**clear_tab(char **word_tab)
 		++i;
 	}
 	free(word_tab);
-	return (NULL);
 }
 
-char			**ft_split(const char *str, char c)
+static size_t	get_word_size(const char *str, const char *ifs)
 {
-	char		*sep;
+	size_t		size;
+
+	size = 0;
+	while (*str && !ft_strchr(ifs, *str))
+	{
+		++str;
+		++size;
+	}
+	return (size);
+}
+
+static char		*get_next_word(const char **str, const char *ifs)
+{
+	char		*word;
+	size_t		word_size;
+
+	while (**str && ft_strchr(ifs, **str))
+		++*str;
+	word_size = get_word_size(*str, ifs);
+	if (!(word = malloc(word_size + 1)))
+		return (NULL);
+	ft_memcpy(word, *str, word_size);
+	word[word_size] = '\0';
+	*str += word_size;
+	return (word);
+}
+
+char			**ft_split(const char *str, const char *ifs)
+{
 	char		**word_tab;
 	size_t		word_count;
 	size_t		i;
 
-	if (str == NULL || (i = 0))
+	if (str == NULL || ifs == NULL)
 		return (NULL);
-	word_count = get_word_count(str, c);
+	word_count = get_word_count(str, ifs);
 	if (!(word_tab = (char **)malloc((word_count + 1) * sizeof(char *))))
 		return (NULL);
 	word_tab[word_count] = NULL;
-	while (c != '\0' && (sep = ft_strchr(str, c)) != NULL)
-	{
-		if (sep - str != 0)
+	i = 0;
+	while (i < word_count)
+		if (!(word_tab[i++] = get_next_word(&str, ifs)))
 		{
-			if (!(word_tab[i] = (char *)malloc(sep - str + 1)))
-				return (clear_tab(word_tab));
-			ft_memcpy(word_tab[i], str, sep - str);
-			word_tab[i++][sep - str] = '\0';
+			clear_word_tab(word_tab);
+			return (NULL);
 		}
-		str = sep + 1;
-	}
-	if (i < word_count && add_last_word(str, word_tab, i) != 0)
-		return (clear_tab(word_tab));
 	return (word_tab);
 }
