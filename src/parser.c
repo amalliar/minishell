@@ -6,12 +6,13 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 06:23:19 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/22 13:33:07 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/23 19:14:00 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 #include <errno.h>
+#include <fcntl.h>
 
 #include "msh.h"
 #include "ft_list.h"
@@ -88,12 +89,26 @@ static void		cmd_destroy(void *cmd_)
 		free(cmd->new_stdout);
 	if (cmd->new_stdin)
 		free(cmd->new_stdin);
-		
 }
 
 void			parser_clear(t_list **command_list)
 {
 	ft_lstclear(command_list, cmd_destroy);
+}
+
+static int		touch_old_stdout(t_command *cmd)
+{
+	int		flag;
+	int		fd;
+
+	flag = (cmd->f_stdout_append) ? O_APPEND : O_TRUNC;
+	if ((fd = open(cmd->new_stdout, O_WRONLY | O_CREAT | flag, 0664)) == -1)
+	{
+		ft_printf(MSH_VERSION": %s: %s\n", cmd->new_stdout, strerror(errno));
+		return (1);
+	}
+	close(fd);
+	return (0);
 }
 
 t_list			*parser_proc(t_token *token_list)
@@ -193,9 +208,15 @@ t_list			*parser_proc(t_token *token_list)
 			{
 				((t_command *)cmd_current->content)->f_stdout = 1;
 				((t_command *)cmd_current->content)->f_stdout_append = 0;
-				// TODO: may need to touch old stdout files.
 				if (((t_command *)cmd_current->content)->new_stdout != NULL)
+				{
+					if (touch_old_stdout(cmd_current->content) != 0)
+					{
+						parser_clear(&cmd_list);
+						return (NULL);
+					}
 					free(((t_command *)cmd_current->content)->new_stdout);
+				}
 				if (!(((t_command *)cmd_current->content)->new_stdout = ft_strdup(token_list->data)))
 					exit_failure(MSH_VERSION": %s\n", strerror(errno));
 				if (((t_command *)cmd_current->content)->name == NULL)
@@ -224,9 +245,15 @@ t_list			*parser_proc(t_token *token_list)
 				{
 					((t_command *)cmd_current->content)->f_stdout = 0;
 					((t_command *)cmd_current->content)->f_stdout_append = 1;
-					// TODO: may need to touch old stdout files.
 					if (((t_command *)cmd_current->content)->new_stdout != NULL)
+					{
+						if (touch_old_stdout(cmd_current->content) != 0)
+						{
+							parser_clear(&cmd_list);
+							return (NULL);
+						}
 						free(((t_command *)cmd_current->content)->new_stdout);
+					}
 					if (!(((t_command *)cmd_current->content)->new_stdout = ft_strdup(token_list->data)))
 						exit_failure(MSH_VERSION": %s\n", strerror(errno));
 				}
@@ -255,4 +282,3 @@ t_list			*parser_proc(t_token *token_list)
 	}
 	return (cmd_list);
 }
-
