@@ -6,7 +6,7 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2021/01/23 18:13:44 by amalliar         ###   ########.fr        #
+#    Updated: 2021/01/23 20:38:39 by amalliar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,8 @@ BUILTIN_SRCS := $(addprefix builtin/, $(BUILTIN_SRCS))
 
 UTILS_SRCS := error_tools.c \
               strarr_tools.c \
-              exit_failure.c
+              exit_failure.c \
+              get_full_name.c
 UTILS_SRCS := $(addprefix utils/, $(UTILS_SRCS))
 
 SRCS       := main.c \
@@ -43,7 +44,7 @@ SRCS       := main.c \
               lexer.c \
               parser.c
 SRCS       := $(SRCS) $(UTILS_SRCS) $(BUILTIN_SRCS)
-SRCS  	   := $(addprefix src/, $(SRCS))
+SRCS       := $(addprefix src/, $(SRCS))
 
 OBJS       := $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 DEPS       := $(SRCS:$(SRCDIR)/%.c=$(DEPDIR)/%.d)
