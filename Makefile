@@ -6,7 +6,7 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2021/01/18 08:31:22 by amalliar         ###   ########.fr        #
+#    Updated: 2021/01/23 18:13:44 by amalliar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,13 +22,26 @@ SRCDIR     := src
 OBJDIR     := .obj
 DEPDIR     := .dep
 
-BUILTIN_SRCS := builtin.c env_main.c echo_main.c pwd_main.c
+BUILTIN_SRCS := builtin.c \
+                env_main.c \
+                echo_main.c \
+                pwd_main.c \
+                cd_main.c \
+                export_main.c \
+                unset_main.c \
+                exit_main.c
 BUILTIN_SRCS := $(addprefix builtin/, $(BUILTIN_SRCS))
 
-UTILS_SRCS := error_tools.c strarr_tools.c exit_failure.c
+UTILS_SRCS := error_tools.c \
+              strarr_tools.c \
+              exit_failure.c
 UTILS_SRCS := $(addprefix utils/, $(UTILS_SRCS))
 
-SRCS       := main.c env_tools.c process.c lexer.c parser.c
+SRCS       := main.c \
+              env_tools.c \
+              process.c \
+              lexer.c \
+              parser.c
 SRCS       := $(SRCS) $(UTILS_SRCS) $(BUILTIN_SRCS)
 SRCS  	   := $(addprefix src/, $(SRCS))
 

@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 18:23:55 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/22 14:40:50 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/23 18:03:19 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,10 +264,10 @@ t_token				*lexer_proc(char **line)
 			{
 				lexer_state = LS_NORMAL;
 				finish_current_token(&tok_current, &tok_idx, tok_size - line_idx);
-				tok_idx = 0;
 			}
 			else if (c == '$')
 			{
+				tok_current->type = TT_WORD;
 				env_substitute(&tok_current, &tok_idx, *line, &line_idx, lexer_state);
 				continue ;
 			}
@@ -285,7 +285,6 @@ t_token				*lexer_proc(char **line)
 			{
 				lexer_state = LS_NORMAL;
 				finish_current_token(&tok_current, &tok_idx, tok_size - line_idx);
-				tok_idx = 0;
 			}
 			else
 			{
