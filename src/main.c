@@ -142,12 +142,10 @@ int				main(int argc, char **argv, char **envp)
 				//print_token_list(token_list);
 				if ((command_list = parser_proc(token_list)))
 				{
-					print_command_list(command_list);
-					/*
+					//print_command_list(command_list);
 					if (process(command_list) != 0)
 						; // print some error message and continue
-					*/
-					parser_clear(&command_list);
+				//	parser_clear(&command_list);
 				}
 				lexer_clear(token_list);
 			}

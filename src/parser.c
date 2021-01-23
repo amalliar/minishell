@@ -56,7 +56,7 @@ static char		**alloc_params_list(t_token *token_list)
 			++tt_word_count;
 		token_list = token_list->next;
 	}
-	if (!(params = ft_calloc(tt_word_count, sizeof(char *))))
+	if (!(params = ft_calloc(tt_word_count + 1, sizeof(char *))))
 		exit_failure(MSH_VERSION": %s\n", strerror(errno));
 	return (params);
 }
@@ -117,6 +117,9 @@ t_list			*parser_proc(t_token *token_list)
 			{
 				if (!(((t_command *)cmd_current->content)->name = ft_strdup(token_list->data)))
 					exit_failure(MSH_VERSION": %s\n", strerror(errno));
+                ((t_command *)cmd_current->content)->params = alloc_params_list(token_list);
+                if (!((((t_command *) cmd_current->content)->params)[params_idx++] = ft_strdup(token_list->data)))
+                    exit_failure(MSH_VERSION": %s\n", strerror(errno));
 				parser_state = PS_GET_PARAMS;
 			}
 			else if (token_list->type == TT_LEFT_AB)
@@ -136,11 +139,9 @@ t_list			*parser_proc(t_token *token_list)
 		{
 			if (token_list->type == TT_WORD)
 			{
-				if (((t_command *)cmd_current->content)->params == NULL)
-					((t_command *)cmd_current->content)->params = alloc_params_list(token_list);
-				if (!((((t_command *)cmd_current->content)->params)[params_idx++] = ft_strdup(token_list->data)))
-					exit_failure(MSH_VERSION": %s\n", strerror(errno));
-			}
+                if (!((((t_command *) cmd_current->content)->params)[params_idx++] = ft_strdup(token_list->data)))
+                    exit_failure(MSH_VERSION": %s\n", strerror(errno));
+            }
 			else if (token_list->type == TT_LEFT_AB)
 				parser_state = PS_GET_STDIN;
 			else if (token_list->type == TT_RIGHT_AB)
