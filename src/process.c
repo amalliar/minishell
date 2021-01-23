@@ -46,10 +46,10 @@ static void		configure_redirection(const t_command *command, int *pipefd)
 		error_check(close(pipefd[0]), "bash: close");
 		dup2move(pipefd[1], 1);
 	}
-	if (command->f_stdout)
+	if (command->f_stdout || command->f_stdout_append)
 	{
-		tmp_fd = open(command->new_stdout, O_WRONLY | O_CREAT | \
-		((command->f_stdout_append) ? O_APPEND : 0), 0664);
+        int flag = command->f_stdout_append ? O_APPEND : O_TRUNC ;
+		tmp_fd = open(command->new_stdout, O_WRONLY | O_CREAT | flag, 0664);
 		error_check(tmp_fd, command->new_stdin);
 		dup2move(tmp_fd, 1);
 	}
@@ -146,6 +146,7 @@ int				process(const t_list *commands)
 		normal_builtin = !command->pipe && !g_prev_pipe && check_builtin(command->name);
 		if (normal_builtin)
 		{
+            configure_redirection(command, pipefd);
 			run_builtin(command->name, command->params, g_environ);
 			commands = commands->next;
 			continue;
@@ -159,5 +160,6 @@ int				process(const t_list *commands)
 			parent(command, pipefd, pid); // error we
 		commands = commands->next;
 	}
+    load_fd(std_fds);
 	return (1);
 }

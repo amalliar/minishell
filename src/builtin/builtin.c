@@ -22,9 +22,9 @@ static t_builtin g_builtins[] = { \
 								{"export", bi_export}, \
 								{"echo", bi_echo}, \
 								{"unset", bi_unset}, \
+								{"exit", bi_exit}, \
 								{"pwd", bi_pwd}, \
 								{"env", bi_env}, \
-								{"env", bi_exit}, \
 								{"cd", bi_cd}
 };
 
