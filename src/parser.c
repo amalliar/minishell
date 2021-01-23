@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 06:23:19 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/23 19:14:00 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/23 20:17:42 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ t_list			*parser_proc(t_token *token_list)
 		{
 			if (token_list->type == TT_WORD)
 			{
-				if (!(((t_command *)cmd_current->content)->name = ft_strdup(token_list->data)))
+				if (!(((t_command *)cmd_current->content)->name = find_in_path(token_list->data)))
 					exit_failure(MSH_VERSION": %s\n", strerror(errno));
                 ((t_command *)cmd_current->content)->params = alloc_params_list(token_list);
                 if (!((((t_command *) cmd_current->content)->params)[params_idx++] = ft_strdup(token_list->data)))

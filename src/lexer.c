@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 18:23:55 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/23 18:03:19 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/23 20:11:56 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static void			append_tokens(t_token **tok_current, int *tok_idx, int tok_size, c
 		temp_tok_size = ft_strlen(*word_list) + 1;
 		temp_tok->next = alloc_new_token(temp_tok_size);
 		temp_tok = temp_tok->next;
-		ft_memcpy(temp_tok->data, *word_list, temp_tok_size);
+		ft_memcpy(temp_tok->data, *word_list++, temp_tok_size);
 		temp_tok->type = TT_WORD;
 	}
 	if (temp_tok->type != TT_NULL)
@@ -193,10 +193,7 @@ t_token				*lexer_proc(char **line)
 		if (lexer_state == LS_NORMAL)
 		{
 			if (c == '\'' || c == '\"')
-			{
 				lexer_state = (c == '\'') ? LS_IN_QUOTES : LS_IN_DQUOTES;
-				finish_current_token(&tok_current, &tok_idx, tok_size - line_idx);
-			}
 			else if (c == '$')
 			{
 				finish_current_token(&tok_current, &tok_idx, tok_size - line_idx);
@@ -261,10 +258,7 @@ t_token				*lexer_proc(char **line)
 		else if (lexer_state == LS_IN_DQUOTES)
 		{
 			if (c == '\"')
-			{
 				lexer_state = LS_NORMAL;
-				finish_current_token(&tok_current, &tok_idx, tok_size - line_idx);
-			}
 			else if (c == '$')
 			{
 				tok_current->type = TT_WORD;
@@ -282,10 +276,7 @@ t_token				*lexer_proc(char **line)
 		else if (lexer_state == LS_IN_QUOTES)
 		{
 			if (c == '\'')
-			{
 				lexer_state = LS_NORMAL;
-				finish_current_token(&tok_current, &tok_idx, tok_size - line_idx);
-			}
 			else
 			{
 				tok_current->type = TT_WORD;

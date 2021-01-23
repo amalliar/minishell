@@ -6,7 +6,7 @@
 /*   By: sbashir <mi243@ya.tu>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 18:08:43 by sbashir           #+#    #+#             */
-/*   Updated: 2021/01/10 18:08:44 by sbashir          ###   ########.fr       */
+/*   Updated: 2021/01/23 19:59:56 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		bi_export(int argc, char **argv, char **envp)
 	int it;
 	int ret;
 
-	it = 0;
+	it = 1;
 	ret = 0;
 	if (argc == 1)
 	{
