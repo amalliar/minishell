@@ -6,14 +6,14 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2020/12/14 03:44:55 by amalliar         ###   ########.fr        #
+#    Updated: 2021/01/23 16:08:04 by sbashir          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SHELL      := /bin/sh
 CC         := clang
 CFLAGS     := -Wall -Wextra -Werror -fdiagnostics-color -g -pipe \
-              -march=native -O2 -fno-strict-aliasing
+              -march=native -O2 -fno-strict-aliasing -fPIE
 INCLUDE    := -I./include -I./include/ft_printf
 AR         := ar -rcs
 NAME       := libft.a
