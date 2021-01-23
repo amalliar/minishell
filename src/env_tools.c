@@ -12,7 +12,6 @@
 
 #include <ft_string.h>
 #include <ft_stdlib.h>
-#include <errno.h>
 #include <error_tools.h>
 #include <other_tools.h>
 #include <ft_ctype.h>
@@ -28,17 +27,20 @@ static int		copy_env(int expand)
 
 	envlen = strarr_len(g_environ);
 	if (!(envp = ft_calloc(envlen + expand + 1, sizeof(char *))))
-		return (0);
+    {
+        return (0);
+    }
 	while (envlen--)
 	{
 		if (!(envp[envlen] = ft_strdup(g_environ[envlen])))
+        {
 			return (strarr_free(envp + envlen));
+        }
 	}
 	if (g_initialized)
 		strarr_free(g_environ);
 	g_environ = envp;
 	return (1);
-	errno;
 }
 
 int				init_environ(char **envp)
@@ -47,8 +49,6 @@ int				init_environ(char **envp)
 	if (g_initialized)
 		return (1);
 	g_initialized = copy_env(0);
-	if (!ft_getenv("IFS"))
-		ft_setenv("IFS", " \t\n");
 	return (g_initialized);
 }
 

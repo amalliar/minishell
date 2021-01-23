@@ -8,7 +8,7 @@ add_executable(cmsh src/main.c src/env_tools.c src/utils/strarr_tools.c
         src/builtin/echo_main.c src/builtin/env_main.c src/builtin/pwd_main.c
         src/builtin/cd_main.c src/builtin/unset_main.c
         src/builtin/export_main.c src/builtin/exit_main.c
-        src/lexer.c src/parser.c src/utils/exit_failure.c src/get_full_name.c)
+        src/lexer.c src/parser.c src/utils/exit_failure.c src/utils/get_full_name.c)
 
 include_directories(libft/include include libft)
 #find_library(LIBFT_G ft "${CMAKE_SOURCE_DIR}/libft/")

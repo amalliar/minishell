@@ -120,6 +120,7 @@ static void		print_command_list(t_list *command_list)
 	}
 }
 
+
 int				main(int argc, char **argv, char **envp)
 {
 	int			ret;

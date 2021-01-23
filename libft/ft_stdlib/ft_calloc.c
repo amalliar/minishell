@@ -12,7 +12,7 @@
 
 #include "ft_stdlib.h"
 #include "ft_string.h"
-
+#include <errno.h>
 /*
 ** Allocates a block of memory for an array of num elements, each of them
 ** size bytes long, and initializes all its bits to zero.
@@ -25,7 +25,10 @@ void	*ft_calloc(size_t num, size_t size)
 
 	block_size = num * size;
 	if (!(block = malloc(block_size)))
+    {
+	    errno = ENOMEM;
 		return (NULL);
+    }
 	ft_memset(block, 0, block_size);
 	return (block);
 }

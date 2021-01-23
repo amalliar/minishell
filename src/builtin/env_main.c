@@ -14,12 +14,14 @@
 #include <ft_stdio.h>
 #include <stdbool.h>
 
-int	bi_env(int argc, char **argv, char **envp)
+int	bi_env(int argc, char **argv,char **envp)
 {
 	while (*envp)
 	{
-		ft_putstr(*envp);
-		ft_putchar('\n'); //TODO : _ // problem
+	    if(ft_strchr(*envp, '=')) {
+            ft_putstr(*envp);
+            ft_putchar('\n'); //TODO : _ // problem
+        }
 		envp++;
 	}
 	return (0);

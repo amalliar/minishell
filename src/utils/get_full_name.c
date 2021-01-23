@@ -39,7 +39,7 @@ static char* find_in_path(char *bin_name)
         walker++;
     }
     strarr_free(splitted);
-    return (tmp2);
+    return (tmp);
 }
 
 char* kostil(char *bin_name)

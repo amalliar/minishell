@@ -13,6 +13,7 @@
 #include <ft_stdio.h>
 #include <error_tools.h>
 #include <env_tools.h>
+#include <ft_string.h>
 
 int		bi_export(int argc, char **argv, char **envp)
 {
@@ -24,13 +25,19 @@ int		bi_export(int argc, char **argv, char **envp)
 	if (argc == 1)
 	{
 		while (*envp)
-			ft_printf("declare -x %s\n", *envp);
+			ft_printf("declare -x %s\n", *(envp++));
 		return (0);
 	}
 	while (it < argc)
 	{
 		ret = 0;
-		if (!ft_putenv(argv[it]))
+        if(!ft_strchr(argv[it], '=') && ft_getenv(argv[it]))
+        {
+            it++;
+            continue;
+        }
+
+        if (!ft_putenv(argv[it]))
 		{
 			putstr_err("bash: export: ", 1);
 			putstr_err(argv[it], 1);
