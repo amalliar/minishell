@@ -15,5 +15,6 @@
 
 int			strarr_free(char **str_arr);
 size_t		strarr_len(char **str_arr);
+char        *get_full_name(char *bin_name);
 
 #endif

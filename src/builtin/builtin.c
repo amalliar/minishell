@@ -16,7 +16,6 @@
 #include <error_tools.h>
 #include <other_tools.h>
 
-#define BUILTINS_SIZE 7 // TODO: Remove it if u can!
 
 static t_builtin g_builtins[] = { \
 								{"export", bi_export}, \
@@ -25,17 +24,16 @@ static t_builtin g_builtins[] = { \
 								{"exit", bi_exit}, \
 								{"pwd", bi_pwd}, \
 								{"env", bi_env}, \
-								{"cd", bi_cd}
+								{"cd", bi_cd},
+                                {NULL, NULL}
 };
-
-//static const int g_builtins_size = sizeof(builtins)/ sizeof(t_builtin);
 
 const t_builtin		*check_builtin(char *command)
 {
 	int i;
 
 	i = 0;
-	while (i < BUILTINS_SIZE)
+	while (g_builtins[i].name)
 	{
 		if (!ft_strcmp(g_builtins[i].name, command))
 			return (&(g_builtins[i]));

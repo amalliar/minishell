@@ -22,6 +22,9 @@
 #include <fcntl.h>
 #include <ft_string.h>
 #include <error_tools.h>
+#include <env_tools.h>
+#include <sys/stat.h>
+#include <other_tools.h>
 
 static int g_prev_pipe;
 extern char **g_environ;
@@ -130,6 +133,9 @@ void			load_fd(int *std_fds)
 		it++;
 	}
 }
+
+
+
 
 int				process(const t_list *commands)
 {
