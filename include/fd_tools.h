@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   other_tools.h                                      :+:      :+:    :+:   */
+/*   fd_tools.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbashir <mi243@ya.ru>                      +#+  +:+       +#+        */
+/*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/22 22:02:00 by sbashir           #+#    #+#             */
-/*   Updated: 2021/01/24 10:32:52 by amalliar         ###   ########.fr       */
+/*   Created: 2021/01/24 10:32:06 by amalliar          #+#    #+#             */
+/*   Updated: 2021/01/24 10:32:30 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef OTHER_TOOLS_H
-# define OTHER_TOOLS_H
+#ifndef CMSH_FD_TOOLS_H
+# define CMSH_FD_TOOLS_H
 
-int			strarr_free(char **str_arr);
-size_t		strarr_len(char **str_arr);
-char		*get_full_name(char *bin_name);
+void		save_fd(int *std_fds);
+void		dup2move(int old_fd, int new_fd);
+void		load_fd(int *std_fds);
 
 #endif

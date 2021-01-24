@@ -6,7 +6,7 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2021/01/23 20:38:39 by amalliar         ###   ########.fr        #
+#    Updated: 2021/01/24 12:27:50 by amalliar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,14 +34,20 @@ BUILTIN_SRCS := $(addprefix builtin/, $(BUILTIN_SRCS))
 
 UTILS_SRCS := error_tools.c \
               strarr_tools.c \
+              prompt_tools.c \
+              env_tools.c \
+              fd_tools.c \
+              test_tools.c \
               exit_failure.c \
-              get_full_name.c
+              get_full_name.c \
+	      handlers.c
 UTILS_SRCS := $(addprefix utils/, $(UTILS_SRCS))
 
 SRCS       := main.c \
-              env_tools.c \
               process.c \
               lexer.c \
+	      lexer_utils.c \
+	      lexer_utils_2.c \
               parser.c
 SRCS       := $(SRCS) $(UTILS_SRCS) $(BUILTIN_SRCS)
 SRCS       := $(addprefix src/, $(SRCS))
