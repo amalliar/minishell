@@ -15,6 +15,8 @@
 
 int	bi_env(int argc, char **argv, char **envp)
 {
+	(void)argc;
+	(void)argv;
 	while (*envp)
 	{
 		if (ft_strchr(*envp, '='))

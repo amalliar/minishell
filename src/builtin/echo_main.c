@@ -19,6 +19,7 @@ int	bi_echo(int argc, char **argv, char **envp)
 	int		it;
 	bool	n_option;
 
+	(void)envp;
 	it = 1;
 	n_option = false;
 	while (it < argc && !ft_strcmp(argv[it], "-n") && it++)

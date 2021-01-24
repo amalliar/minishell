@@ -19,6 +19,7 @@ int				bi_cd(int argc, char **argv, char **envp)
 {
 	char		*path;
 
+	(void)envp;
 	if (argc > 2)
 		return (putstr_err("bash: cd: too many arguments\n", 1));
 	else if (argc == 1)

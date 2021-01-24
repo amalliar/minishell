@@ -107,7 +107,7 @@ static void			append_tokens(t_token **tok_current, int *tok_idx, int tok_size, c
 static void			expand_token(t_token *tok_current, int *tok_idx, int tok_size, char *word)
 {
 	char	*buff;
-	int		buff_size;
+	//int		buff_size;
 	int		word_len;
 
 	if (!tok_current || !word)

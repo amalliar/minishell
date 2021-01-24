@@ -39,7 +39,7 @@ static void		read_loop_except(int ret)
 }
 
 // TODO: remove from final version.
-static void		print_token_list(t_token *token_list)
+__unused static void		print_token_list(t_token *token_list)
 {
 	while (token_list)
 	{
@@ -70,7 +70,7 @@ static void		print_params(char **params)
 		ft_printf("arg_%d [%s]\n", count++, *params++);
 }
 
-static void		print_command_list(t_list *command_list)
+__unused static void		print_command_list(t_list *command_list)
 {
 	t_command		*cmd;
 	int				cmd_idx;
@@ -104,17 +104,17 @@ static void		print_command_list(t_list *command_list)
 
 
 
-int				main(int argc, char **argv, char **envp)
+int				main(int argc, char **argv)
 {
 	int			ret;
 	char		*line;
 	t_token		*token_list;
 	t_list		*command_list;
 
+	(void)argc;
+	(void)argv;
 	signal(SIGINT, sigint_h);
 	signal(SIGQUIT, sigint_h);
-	if (!init_environ(envp))
-		exit_failure(MSH_VERSION": %s\n", strerror(errno));
 	set_prompt(MSH_VERSION"$ ");
 	while (1)
 	{
@@ -129,7 +129,8 @@ int				main(int argc, char **argv, char **envp)
 				if ((command_list = parser_proc(token_list)))
 				{
 				//	print_command_list(command_list);
-					if (process(command_list) != 0);
+					if (process(command_list) != 0)
+						;
 					; // print some error message and continue
 					parser_clear(&command_list);
 				}

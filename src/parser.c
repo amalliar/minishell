@@ -78,7 +78,7 @@ static void		cmd_destroy(void *cmd_)
 {
 	t_command	*cmd;
 
-	if (!cmd)
+	if (!cmd_)
 		return ;
 	cmd = cmd_;
 	if (cmd->name)

@@ -18,6 +18,9 @@ int		bi_pwd(int argc, char **argv, char **envp)
 {
 	char *path;
 
+	(void)argc;
+	(void)argv;
+	(void)envp;
 	if (!(path = getcwd(NULL, 0)))
 		return (putstr_err("pwd: getcwd: error", 1));
 	ft_printf("%s\n", getcwd(0, 0));

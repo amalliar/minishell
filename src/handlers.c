@@ -3,5 +3,6 @@
 
 void sigint_h(int n)
 {
+	(void)n;
 	ft_printf("\n%s", get_prompt());
 }
