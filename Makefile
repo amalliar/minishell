@@ -6,13 +6,13 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2021/01/23 20:38:39 by amalliar         ###   ########.fr        #
+#    Updated: 2021/01/25 11:12:59 by amalliar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SHELL      := /bin/sh
 CC         := clang
-CFLAGS     :=  -fdiagnostics-color -g -pipe
+CFLAGS     := -Wall -Wextra -fdiagnostics-color -g -pipe
               #-march=native -O2 -flto
 INCLUDE    := -I./include -I./libft/include
 NAME       := minishell
