@@ -13,7 +13,7 @@
 #ifndef ENV_TOOLS_H
 # define ENV_TOOLS_H
 
-int		init_environ(char **envp);
+int		init_environ(void);
 char	*ft_getenv(const char *name);
 int		ft_unsetenv(const char *name);
 char	*ft_putenv(const char *string);

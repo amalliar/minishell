@@ -6,13 +6,13 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2021/01/24 15:39:52 by amalliar         ###   ########.fr        #
+#    Updated: 2021/01/23 20:38:39 by amalliar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SHELL      := /bin/sh
 CC         := clang
-CFLAGS     :=  -Wall -Wextra -fdiagnostics-color -g -pipe
+CFLAGS     :=  -fdiagnostics-color -g -pipe
               #-march=native -O2 -flto
 INCLUDE    := -I./include -I./libft/include
 NAME       := minishell
@@ -39,13 +39,16 @@ UTILS_SRCS := error_tools.c \
               fd_tools.c \
               test_tools.c \
               exit_failure.c \
-              get_full_name.c \
-	      handlers.c
+              get_full_name.c
 UTILS_SRCS := $(addprefix utils/, $(UTILS_SRCS))
 
 SRCS       := main.c \
+              env_tools.c \
               process.c \
               lexer.c \
+			  handlers.c \
+			  fd_tools.c \
+			  prompt_tools.c \
               lexer_2.c \
 	      lexer_utils.c \
 	      lexer_utils_2.c \

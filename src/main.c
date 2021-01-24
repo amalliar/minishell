@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 03:33:51 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/24 15:22:16 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/22 13:24:04 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #include "process.h"
 #include "prompt_tools.h"
 #include "handlers.h"
-#include "test_tools.h"
+
 
 static void		read_loop_except(int ret)
 {
@@ -47,8 +47,6 @@ int				main(int argc, char **argv, char **envp)
 
 	signal(SIGINT, sigint_h);
 	signal(SIGQUIT, sigint_h);
-	if (!init_environ(envp))
-		exit_failure(MSH_VERSION": %s\n", strerror(errno));
 	set_prompt(MSH_VERSION"$ ");
 	while (1)
 	{

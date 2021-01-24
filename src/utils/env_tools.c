@@ -27,15 +27,15 @@ static int		copy_env(int expand)
 
 	envlen = strarr_len(g_environ);
 	if (!(envp = ft_calloc(envlen + expand + 1, sizeof(char *))))
-    {
-        return (0);
-    }
+	{
+		return (0);
+	}
 	while (envlen--)
 	{
 		if (!(envp[envlen] = ft_strdup(g_environ[envlen])))
-        {
+		{
 			return (strarr_free(envp + envlen));
-        }
+		}
 	}
 	if (g_initialized)
 		strarr_free(g_environ);
@@ -43,11 +43,13 @@ static int		copy_env(int expand)
 	return (1);
 }
 
-int				init_environ(char **envp)
+int				init_environ(void)
 {
-	g_environ = envp;
+	extern char **environ;
+
 	if (g_initialized)
 		return (1);
+	g_environ = environ;
 	g_initialized = copy_env(0);
 	return (g_initialized);
 }
@@ -58,7 +60,7 @@ static char		**findenv(const char *name)
 	char		**envp;
 	char		*eq_char;
 
-	msg_assert(g_initialized, "Use init_environ first");
+	init_environ();
 	eq_char = ft_strchr(name, '=');
 	namelen = eq_char ? eq_char - name : ft_strlen(name);
 	envp = g_environ;
@@ -76,7 +78,9 @@ char			*ft_getenv(const char *name)
 	char **env;
 	char *val;
 
-	msg_assert(g_initialized, "Use init_environ first");
+	init_environ();
+	if(!name || !*name)
+		return (NULL);
 	if (!(env = findenv(name)))
 		return (NULL);
 	val = ft_strchr(*env, '=') + 1;
@@ -87,9 +91,7 @@ int				ft_unsetenv(const char *name)
 {
 	char **envp;
 
-	msg_assert(g_initialized, "Use init_environ first");
-	if (!(ft_isalpha(name[0]) || name[0] == '_'))
-		return (0);
+	init_environ();
 	if (!(envp = findenv(name)))
 		return (0);
 	free(*envp);
@@ -100,10 +102,9 @@ int				ft_unsetenv(const char *name)
 
 char			*ft_putenv(const char *string)
 {
-	char	**envp;
 	size_t	envlen;
 
-	msg_assert(g_initialized, "Use init_environ first");
+	init_environ();
 	msg_assert(string, "String is NULL");
 	if (!(ft_isalpha(string[0]) || string[0] == '_'))
 		return (NULL);
@@ -118,8 +119,8 @@ char			*ft_setenv(const char *name, const char *value)
 	char *tmp;
 	char *ret;
 
-	msg_assert(g_initialized, "Use init_environ first");
-	msg_assert(value, "Pointers are NULL"); //TODO: possibility value == ""
+	init_environ();
+	msg_assert(value, "Pointers are NULL");
 	if (!(name = ft_strjoin(name, "=")))
 		return (0);
 	tmp = ft_strjoin(name, value);
