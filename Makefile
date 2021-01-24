@@ -39,16 +39,13 @@ UTILS_SRCS := error_tools.c \
               fd_tools.c \
               test_tools.c \
               exit_failure.c \
-              get_full_name.c
+              get_full_name.c \
+              handlers.c
 UTILS_SRCS := $(addprefix utils/, $(UTILS_SRCS))
 
 SRCS       := main.c \
-              env_tools.c \
               process.c \
               lexer.c \
-			  handlers.c \
-			  fd_tools.c \
-			  prompt_tools.c \
               lexer_2.c \
 	      lexer_utils.c \
 	      lexer_utils_2.c \
