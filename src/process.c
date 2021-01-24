@@ -21,6 +21,7 @@
 #include <error_tools.h>
 #include <stdbool.h>
 #include "fd_tools.h"
+#include "handlers.h"
 
 static int g_prev_pipe;
 unsigned char g_question;
@@ -86,8 +87,10 @@ int				parent(const t_command *command, int *pipefd, pid_t pid)
 		return (EXIT_SUCCESS);
 	}
 	it = 0;
+	signal(SIGINT, SIG_IGN);
 	while (it < pid_it)
 		waitpid(pids[it++], &status, 0);
+	signal(SIGINT, sigint_h);
 	pid_it = 0;
 	ft_memset(pids, 0, sizeof(pids));
 	return (g_question = status);

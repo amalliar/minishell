@@ -23,27 +23,9 @@
 #include "env_tools.h"
 #include "error_tools.h"
 #include "process.h"
+#include "prompt_tools.h"
+#include "handlers.h"
 
-char			*g_msh_prompt = NULL;
-
-void			set_prompt(char *new_prompt)
-{
-	char	*new_prompt_dup;
-
-	if (!(new_prompt_dup = ft_strdup(new_prompt)))
-		exit_failure(MSH_VERSION": %s\n", strerror(errno));
-	if (g_msh_prompt)
-		free(g_msh_prompt);
-	g_msh_prompt = new_prompt_dup;
-}
-
-char			*get_prompt(void)
-{
-	if (g_msh_prompt)
-		return (g_msh_prompt);
-	exit_failure(MSH_VERSION": g_msh_prompt not set\n");
-	return (NULL);
-}
 
 static void		read_loop_except(int ret)
 {
@@ -129,13 +111,14 @@ int				main(int argc, char **argv, char **envp)
 	t_token		*token_list;
 	t_list		*command_list;
 
+	signal(SIGINT, sigint_h);
+	signal(SIGQUIT, sigint_h);
 	if (!init_environ(envp))
 		exit_failure(MSH_VERSION": %s\n", strerror(errno));
 	set_prompt(MSH_VERSION"$ ");
 	while (1)
 	{
 		ft_printf("%s", get_prompt());
-		//signal(SIGINT, tmp);
 		if ((ret = ft_get_next_line(STDIN_FILENO, &line)) <= 0)
 			read_loop_except(ret);
 		while (line)
@@ -145,9 +128,9 @@ int				main(int argc, char **argv, char **envp)
 				//print_token_list(token_list);
 				if ((command_list = parser_proc(token_list)))
 				{
-					//print_command_list(command_list);
+				//	print_command_list(command_list);
 					if (process(command_list) != 0)
-						; // print some error message and continue
+					//	; // print some error message and continue
 					parser_clear(&command_list);
 				}
 				lexer_clear(token_list);
@@ -156,3 +139,13 @@ int				main(int argc, char **argv, char **envp)
 	}
 	return (0);
 }
+
+// export _32
+//declare -x a=ec
+//declare -x b=ho
+//msh-0.1$ $a$b hello
+//export "Ha HA"=tr
+//ЭКРАНИРОВАНИЕ!!!!!!!!!!!!!!!!!!
+//%?
+//норма!!!
+

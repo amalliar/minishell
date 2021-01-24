@@ -88,6 +88,8 @@ int				ft_unsetenv(const char *name)
 	char **envp;
 
 	msg_assert(g_initialized, "Use init_environ first");
+	if (!(ft_isalpha(name[0]) || name[0] == '_'))
+		return (0);
 	if (!(envp = findenv(name)))
 		return (0);
 	free(*envp);
@@ -103,7 +105,7 @@ char			*ft_putenv(const char *string)
 
 	msg_assert(g_initialized, "Use init_environ first");
 	msg_assert(string, "String is NULL");
-	if (!ft_isalpha(string[0]))
+	if (!(ft_isalpha(string[0]) || string[0] == '_'))
 		return (NULL);
 	if (!ft_unsetenv(string))
 		copy_env(1);
