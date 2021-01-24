@@ -15,7 +15,15 @@
 #include <env_tools.h>
 #include <ft_string.h>
 
-int		bi_export(int argc, char **argv, char **envp)
+static int	exp_errprint(char *str)
+{
+	putstr_err("bash: export: ", 1);
+	putstr_err(str, 1);
+	putstr_err(" not a valid identifier\n", 1);
+	return (1);
+}
+
+int			bi_export(int argc, char **argv, char **envp)
 {
 	int it;
 	int ret;
@@ -31,19 +39,10 @@ int		bi_export(int argc, char **argv, char **envp)
 	while (it < argc)
 	{
 		ret = 0;
-        if(!ft_strchr(argv[it], '=') && ft_getenv(argv[it]))
-        {
-            it++;
-            continue;
-        }
-
-        if (!ft_putenv(argv[it]))
-		{
-			putstr_err("bash: export: ", 1);
-			putstr_err(argv[it], 1);
-			putstr_err(" not a valid identifier\n", 1);
-			ret = 1;
-		}
+		if (!ft_strchr(argv[it], '=') && ft_getenv(argv[it]) && it++)
+			continue;
+		if (!ft_putenv(argv[it]))
+			ret = exp_errprint(argv[it]);
 		it++;
 	}
 	return (ret);

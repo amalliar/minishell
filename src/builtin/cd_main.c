@@ -30,11 +30,11 @@ int				bi_cd(int argc, char **argv, char **envp)
 		path = argv[1];
 	if (chdir(path) == -1)
 	{
-		ft_perror(path); //TODO: change error msg
+		ft_perror(path);
 		return (EXIT_FAILURE);
 	}
 	ft_setenv("OLDPWD", ft_getenv("PWD"));
-	msg_assert(path = getcwd(NULL,0), "getcwd error");
+	msg_assert(path = getcwd(NULL, 0), "getcwd error");
 	ft_setenv("PWD", path);
 	free(path);
 	return (EXIT_SUCCESS);

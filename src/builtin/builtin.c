@@ -16,16 +16,15 @@
 #include <error_tools.h>
 #include <other_tools.h>
 
-
 static t_builtin g_builtins[] = { \
-								{"export", bi_export}, \
-								{"echo", bi_echo}, \
-								{"unset", bi_unset}, \
-								{"exit", bi_exit}, \
-								{"pwd", bi_pwd}, \
-								{"env", bi_env}, \
-								{"cd", bi_cd},
-                                {NULL, NULL}
+	{"export", bi_export}, \
+	{"echo", bi_echo}, \
+	{"unset", bi_unset}, \
+	{"exit", bi_exit}, \
+	{"pwd", bi_pwd}, \
+	{"env", bi_env}, \
+	{"cd", bi_cd},
+	{NULL, NULL}
 };
 
 const t_builtin		*check_builtin(char *command)

@@ -9,6 +9,7 @@
 /*   Updated: 2021/01/08 13:20:28 by sbashir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <unistd.h>
 #include <ft_stdio.h>
 #include <error_tools.h>
@@ -17,7 +18,7 @@ int		bi_pwd(int argc, char **argv, char **envp)
 {
 	char *path;
 
-	if(!(path = getcwd(NULL, 0)))
+	if (!(path = getcwd(NULL, 0)))
 		return (putstr_err("pwd: getcwd: error", 1));
 	ft_printf("%s\n", getcwd(0, 0));
 	free(path);

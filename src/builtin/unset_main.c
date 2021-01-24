@@ -12,7 +12,7 @@
 
 #include <env_tools.h>
 
-int bi_unset(int argc, char **argv, char **envp)
+int		bi_unset(int argc, char **argv, char **envp)
 {
 	int it;
 

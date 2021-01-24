@@ -16,13 +16,13 @@
 
 int	bi_echo(int argc, char **argv, char **envp)
 {
-	int	it;
+	int		it;
 	bool	n_option;
 
 	it = 1;
 	n_option = false;
 	while (it < argc && !ft_strcmp(argv[it], "-n") && it++)
-		n_option = true; 
+		n_option = true;
 	while (it < argc)
 	{
 		ft_putstr(argv[it]);
