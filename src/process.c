@@ -11,36 +11,24 @@
 /* ************************************************************************** */
 
 #include <ft_list.h>
-#include <ft_stdlib.h>
 #include <unistd.h>
 #include <process.h>
 #include <builtin.h>
 
-#include <errno.h>
-#include <sys/types.h>
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <ft_string.h>
 #include <error_tools.h>
-#include <env_tools.h>
-#include <sys/stat.h>
-#include <other_tools.h>
+#include <stdbool.h>
+#include "fd_tools.h"
 
 static int g_prev_pipe;
-extern char **g_environ;
 unsigned char g_question;
-
-static void		dup2move(int old_fd, int new_fd)
-{
-	errno = 0;
-	error_check(dup2(old_fd, new_fd), "dup2 in dup2move");
-	errno = 0;
-	error_check(close(old_fd), "close oldfd dup2");
-}
 
 static void		configure_redirection(const t_command *command, int *pipefd)
 {
 	int			tmp_fd;
+	int			flag;
 
 	if (g_prev_pipe)
 		dup2move(g_prev_pipe, 0);
@@ -51,7 +39,7 @@ static void		configure_redirection(const t_command *command, int *pipefd)
 	}
 	if (command->f_stdout || command->f_stdout_append)
 	{
-        int flag = command->f_stdout_append ? O_APPEND : O_TRUNC ;
+		flag = command->f_stdout_append ? O_APPEND : O_TRUNC;
 		tmp_fd = open(command->new_stdout, O_WRONLY | O_CREAT | flag, 0664);
 		error_check(tmp_fd, command->new_stdin);
 		dup2move(tmp_fd, 1);
@@ -64,30 +52,29 @@ static void		configure_redirection(const t_command *command, int *pipefd)
 	}
 }
 
-
-
-
-int 			child(const t_command *command, int *pipefd)
+int				child(const t_command *cmd, int *pipefd, bool run_fork)
 {
-	int ret;
+	extern char	**g_environ;
+	int			ret;
 
 	ret = EXIT_SUCCESS;
-	configure_redirection(command, pipefd);
-	if (check_builtin(command->name))
-		ret = run_builtin(command->name, command->params, g_environ);
+	configure_redirection(cmd, pipefd);
+	if (check_builtin(cmd->name))
+		ret = run_builtin(cmd->name, cmd->params, g_environ);
 	else
-		error_check(execve(command->name, command->params, g_environ), command->name);
-	exit(ret);
+		error_check(execve(cmd->name, cmd->params, g_environ), cmd->name);
+	if (run_fork)
+		exit(ret);
+	return (ret);
 }
 
 int				parent(const t_command *command, int *pipefd, pid_t pid)
 {
 	static pid_t	pids[1024];
-	int				pid_it;
+	static int		pid_it;
 	int				status;
 	int				it;
 
-	pid_it = 0;
 	if (g_prev_pipe)
 		close(g_prev_pipe);
 	g_prev_pipe = 0;
@@ -96,45 +83,15 @@ int				parent(const t_command *command, int *pipefd, pid_t pid)
 	{
 		error_check(close(pipefd[1]), "bash: close");
 		g_prev_pipe = pipefd[0];
+		return (EXIT_SUCCESS);
 	}
-	else
-	{
-		it = 0;
-		while (it < pid_it)
-			waitpid(pids[it++], &status, 0);
-		g_question = status;
-		ft_memset(pids, 0, sizeof(pids));
-	}
-	return (status);
-}
-
-void			save_fd(int *std_fds)
-{
-	int			it;
-
 	it = 0;
-	if (std_fds[1])
-		return ;
-	while (it < 3)
-	{
-		error_check(std_fds[it] = dup(it), "save_fd: dup");
-		it++;
-	}
+	while (it < pid_it)
+		waitpid(pids[it++], &status, 0);
+	pid_it = 0;
+	ft_memset(pids, 0, sizeof(pids));
+	return (g_question = status);
 }
-
-void			load_fd(int *std_fds)
-{
-	int			it;
-
-	it = 0;
-	while (it < 3)
-	{
-		error_check(dup2(std_fds[it], it), "load_fd: dup2");
-		it++;
-	}
-}
-
-
 
 
 int				process(const t_list *commands)
@@ -142,30 +99,26 @@ int				process(const t_list *commands)
 	pid_t		pid;
 	int			pipefd[2];
 	static int	std_fds[3];
-	t_command	*command;
-	_Bool		normal_builtin;
+	t_command	*cmd;
+	bool		run_fork;
 
 	save_fd(std_fds);
-	while (commands && (command = commands->content))
+	while (commands && (cmd = commands->content))
 	{
-		load_fd(std_fds);
-		normal_builtin = !command->pipe && !g_prev_pipe && check_builtin(command->name);
-		if (normal_builtin)
+		pid = 0;
+		run_fork = cmd->pipe || g_prev_pipe || !check_builtin(cmd->name);
+		if (run_fork)
 		{
-            configure_redirection(command, pipefd);
-			run_builtin(command->name, command->params, g_environ);
-			commands = commands->next;
-			continue;
+			if (cmd->pipe)
+				error_check(pipe(pipefd), "pipe");
+			error_check(pid = fork(), "fork");
 		}
-		if (command->pipe)
-			error_check(pipe(pipefd), "pipe");
-		error_check(pid = fork(), "fork");
 		if (pid == 0)
-			child(command, pipefd);
+			child(cmd, pipefd, run_fork);
 		if (pid > 0)
-			parent(command, pipefd, pid); // error we
+			parent(cmd, pipefd, pid);
+		load_fd(std_fds);
 		commands = commands->next;
 	}
-    load_fd(std_fds);
 	return (1);
 }

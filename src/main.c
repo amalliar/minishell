@@ -121,6 +121,7 @@ static void		print_command_list(t_list *command_list)
 }
 
 
+
 int				main(int argc, char **argv, char **envp)
 {
 	int			ret;
@@ -134,6 +135,7 @@ int				main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		ft_printf("%s", get_prompt());
+		//signal(SIGINT, tmp);
 		if ((ret = ft_get_next_line(STDIN_FILENO, &line)) <= 0)
 			read_loop_except(ret);
 		while (line)
@@ -146,7 +148,7 @@ int				main(int argc, char **argv, char **envp)
 					//print_command_list(command_list);
 					if (process(command_list) != 0)
 						; // print some error message and continue
-				//	parser_clear(&command_list);
+					parser_clear(&command_list);
 				}
 				lexer_clear(token_list);
 			}
