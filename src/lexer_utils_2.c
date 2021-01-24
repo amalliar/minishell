@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/24 12:20:29 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/24 12:36:51 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/24 16:51:35 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ static void		expand_token(t_lexer *lexer, char *word)
 	if (!word)
 		exit_failure(MSH_VERSION": expand_token() got a NULL pointer.\n");
 	word_len = ft_strlen(word);
-	if (!(buff = malloc(ft_strlen(*lexer->line) + lexer->tok_idx + \
-		word_len + 1)))
+	buff_size = ft_strlen(*lexer->line) + lexer->tok_idx + word_len + 1;
+	if (!(buff = malloc(buff_size)))
 		exit_failure(MSH_VERSION": %s\n", strerror(errno));
 	ft_memcpy(buff, lexer->tok_current->data, lexer->tok_idx);
 	ft_memcpy(buff + lexer->tok_idx, word, word_len);
@@ -72,7 +72,7 @@ static char		*get_evar_name(t_lexer *lexer)
 	while (1)
 	{
 		c = (*lexer->line)[lexer->line_idx];
-		if (ft_strchr(" ;|<>$\"\'", c))
+		if (ft_strchr(" ;|<>$\"\'", c) || (evar_idx == 1 && evar[0] == '?'))
 		{
 			evar[evar_idx] = '\0';
 			break ;
@@ -85,7 +85,6 @@ static char		*get_evar_name(t_lexer *lexer)
 
 void			env_substitute(t_lexer *lexer)
 {
-	char	c;
 	char	*evar;
 	char	*eval;
 	char	*ifs;
@@ -98,7 +97,6 @@ void			env_substitute(t_lexer *lexer)
 		{
 			if (!(ifs = ft_getenv("IFS")))
 				ifs = " \t\n";
-			// TODO: test if works with an empty list
 			if (!(tokens = ft_split(eval, ifs)))
 				exit_failure(MSH_VERSION": %s\n", strerror(errno));
 			append_tokens(lexer, tokens);
@@ -108,4 +106,5 @@ void			env_substitute(t_lexer *lexer)
 			expand_token(lexer, eval);
 	}
 	free(evar);
+	--lexer->line_idx;
 }

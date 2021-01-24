@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 06:23:19 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/23 20:40:57 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/24 14:10:50 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static void		cmd_destroy(void *cmd_)
 {
 	t_command	*cmd;
 
-	if (!cmd)
+	if (!cmd_)
 		return ;
 	cmd = cmd_;
 	if (cmd->name)
@@ -89,6 +89,7 @@ static void		cmd_destroy(void *cmd_)
 		free(cmd->new_stdout);
 	if (cmd->new_stdin)
 		free(cmd->new_stdin);
+	free(cmd);
 }
 
 void			parser_clear(t_list **command_list)

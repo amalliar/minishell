@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 08:29:18 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/24 12:37:09 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/24 15:37:30 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ enum					e_lexer_states
 	LS_NORMAL,
 	LS_IN_QUOTES,
 	LS_IN_DQUOTES,
+	LS_RETURN_RES
 };
 
 enum					e_token_types
@@ -66,5 +67,7 @@ void					lexer_clear(t_token *token_list);
 void					finish_current_token(t_lexer *lexer);
 void					cut_processed_part(t_lexer *lexer);
 void					env_substitute(t_lexer *lexer);
+void					proc_ls_normal_2(t_lexer *lexer, t_token **tok_list, char c);
+void					proc_ls_normal_3(t_lexer *lexer, char c);
 
 #endif

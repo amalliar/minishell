@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 03:33:51 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/24 10:30:07 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/24 15:22:16 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include "process.h"
 #include "prompt_tools.h"
 #include "handlers.h"
+#include "test_tools.h"
 
 static void		read_loop_except(int ret)
 {
