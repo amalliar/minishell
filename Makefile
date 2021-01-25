@@ -6,7 +6,7 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2021/01/25 11:12:59 by amalliar         ###   ########.fr        #
+#    Updated: 2021/01/25 12:26:01 by amalliar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,9 @@ SRCS       := main.c \
               lexer_2.c \
 	      lexer_utils.c \
 	      lexer_utils_2.c \
-              parser.c
+              parser.c \
+              parser_utils.c \
+              parser_utils_2.c
 SRCS       := $(SRCS) $(UTILS_SRCS) $(BUILTIN_SRCS)
 SRCS       := $(addprefix src/, $(SRCS))
 
