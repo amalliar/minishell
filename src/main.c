@@ -19,15 +19,10 @@
 #include "parser.h"
 #include "ft_stdio.h"
 #include "ft_list.h"
-#include "ft_string.h"
-#include "env_tools.h"
 #include "error_tools.h"
 #include "process.h"
 #include "prompt_tools.h"
 #include "handlers.h"
-
-#include "test_tools.h"
-
 
 static void		read_loop_except(int ret)
 {
@@ -47,8 +42,7 @@ int				main(int argc, char **argv, char **envp)
 	t_token		*token_list;
 	t_list		*command_list;
 
-	signal(SIGINT, sigint_h);
-	signal(SIGQUIT, sigint_h);
+	set_bash_signals();
 	set_prompt(MSH_VERSION"$ ");
 	while (1)
 	{

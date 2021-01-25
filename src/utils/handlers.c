@@ -1,19 +1,34 @@
 #include <ft_stdio.h>
 #include "prompt_tools.h"
 
+
+extern int g_ret;
+
 void sigint_h(int n)
 {
-	extern int g_ret;
-
 	(void)n;
-	ft_printf("\n%s", get_prompt());
-	g_ret = 1;
+	if(n == SIGINT)
+	{
+		ft_printf("\n%s", get_prompt());
+		g_ret = 1;
+	}
 }
 
-void sigint_h_2(int n)
+void pass(int n)
 {
-	extern int g_ret;
+	g_ret = 128 + n;
+	if(n == SIGQUIT)
+		ft_printf("Quit: %d\n", n);
+}
 
-	(void)n;
-	g_ret = 130;
+void set_default_signals()
+{
+	signal(SIGINT, pass);
+	signal(SIGQUIT, pass);
+}
+
+void set_bash_signals()
+{
+	signal(SIGINT, sigint_h);
+	signal(SIGQUIT, SIG_IGN);
 }

@@ -72,7 +72,6 @@ NOC        := \033[0m
 
 all: $(NAME)
 $(NAME): $(OBJS) $(LIBFT)
-	echo $(SRCS)
 	@echo -e "$(LGREEN)Linking executable $(NAME)$(NOC)"
 	$(CC) $(CFLAGS) $(INCLUDE) $(OBJS) $(LIBS) -o $@
 	@echo -e "Built target $(NAME)"

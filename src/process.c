@@ -20,6 +20,8 @@
 #include <ft_string.h>
 #include <error_tools.h>
 #include <stdbool.h>
+#include <other_tools.h>
+#include <errno.h>
 #include "fd_tools.h"
 #include "handlers.h"
 
@@ -59,17 +61,27 @@ int				child(const t_command *cmd, int *pipefd, bool run_fork)
 	int			ret;
 
 	ret = EXIT_SUCCESS;
+	if (run_fork)
+		set_default_signals();
 	configure_redirection(cmd, pipefd);
 	if (check_builtin(cmd->name))
 		ret = run_builtin(cmd->name, cmd->params, g_environ);
-	else
-		error_check(execve(cmd->name, cmd->params, g_environ), cmd->name);
+	else if(!ft_strchr(cmd->name, '/'))
+	{
+		putstr_err("bash: ", 1) && putstr_err(cmd->name, 1);
+		ret = putstr_err(": command not found\n", 127);
+	}
+	else if ((ret = execve(cmd->name, cmd->params, g_environ)) == -1)
+	{
+		ft_perror(cmd->name);
+		exit((errno == 2) ? 127 : 126);
+	}
 	if (run_fork)
 		exit(ret);
 	return (ret);
 }
 
-static int  interpret_status(int status)
+static void		interpret_status(int status)
 {
 	if (WIFEXITED(status) && !WEXITSTATUS(status))
 		g_ret = 0;
@@ -95,16 +107,14 @@ int				parent(const t_command *command, int *pipefd, pid_t pid)
 		return (EXIT_SUCCESS);
 	}
 	it = 0;
-	signal(SIGINT, sigint_h_2);
+	set_default_signals();
 	while (it < pid_it && waitpid(pids[it++], &status, 0))
 		interpret_status(status);
-	signal(SIGINT, sigint_h);
+	set_bash_signals();
 	pid_it = 0;
 	ft_memset(pids, 0, sizeof(pids));
 	return (status);
 }
-
-
 
 int				process(const t_list *commands)
 {
@@ -117,6 +127,8 @@ int				process(const t_list *commands)
 	save_fd(std_fds);
 	while (commands && (cmd = commands->content))
 	{
+		if(!cmd->params)
+			break;
 		pid = 0;
 		run_fork = cmd->pipe || g_prev_pipe || !check_builtin(cmd->name);
 		if (run_fork)
@@ -134,3 +146,7 @@ int				process(const t_list *commands)
 	}
 	return (1);
 }
+
+//TODO: cd ""
+//TODO: exit change when Ctrl+D
+//TODO: Ctrl+\ change new line

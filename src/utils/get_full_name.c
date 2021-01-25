@@ -18,7 +18,7 @@
 #include <other_tools.h>
 #include <builtin.h>
 
-static bool			file_exists(char *filename)
+bool			file_exists(char *filename)
 {
 	struct stat		buffer;
 
@@ -57,7 +57,7 @@ static char			*kostil(char *bin_name)
 {
 	if (check_builtin(bin_name))
 		return (NULL);
-	if (!(bin_name[0] == '/' || bin_name[0] == '.'))
+	if (!ft_strchr(bin_name, '/'))
 		return (find_in_path(bin_name));
 	return (NULL);
 }

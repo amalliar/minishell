@@ -13,7 +13,9 @@
 #ifndef HANDLERS_H
 # define HANDLERS_H
 
-void	sigint_h(int n);
-void	sigint_h_2(int n);
+void 	sigint_h(int n);
+void 	pass(int n);
+void	set_default_signals();
+void 	set_bash_signals();
 
 #endif

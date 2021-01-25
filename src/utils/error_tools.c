@@ -13,6 +13,7 @@
 #include <ft_stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <AssertMacros.h>
 
 void	msg_exit(int i, char *msg)
 {
@@ -44,7 +45,7 @@ void	error_check(int ret_of_func, const char *err_msg)
 	if (ret_of_func != -1)
 		return ;
 	ft_perror(err_msg);
-	exit(ret_of_func);
+	exit(errno);
 }
 
 int		putstr_err(char *msg, int ret)
