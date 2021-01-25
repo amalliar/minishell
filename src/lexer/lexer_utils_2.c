@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/24 12:20:29 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/25 16:06:07 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 23:58:10 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static char		*get_evar_name(t_lexer *lexer)
 	while (1)
 	{
 		c = (*lexer->line)[lexer->line_idx];
-		if (ft_strchr(" ;|<>$\"\'", c) || (evar_idx == 1 && evar[0] == '?'))
+		if (ft_strchr(" ;:|<>$\"\'", c) || (evar_idx == 1 && evar[0] == '?'))
 		{
 			evar[evar_idx] = '\0';
 			break ;
