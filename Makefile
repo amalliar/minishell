@@ -6,7 +6,7 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2021/01/25 16:16:10 by amalliar         ###   ########.fr        #
+#    Updated: 2021/01/25 20:00:28 by amalliar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ UTILS_SRCS := error_tools.c \
               strarr_tools.c \
               prompt_tools.c \
               env_tools.c \
+              env_tools_2.c \
               fd_tools.c \
               test_tools.c \
               exit_failure.c \

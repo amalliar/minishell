@@ -6,7 +6,7 @@
 /*   By: sbashir <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/24 12:16:09 by sbashir           #+#    #+#             */
-/*   Updated: 2021/01/25 19:50:07 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 20:10:18 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int		bi_exit(int argc, char **argv, char **envp)
 		ft_putstr_fd(MSH_VERSION": exit: ", STDERR_FILENO);
 		ft_putstr_fd(argv[1], STDERR_FILENO);
 		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-		exit(2);
+		exit(255);
 	}
 	if (argc > 2)
 		return (putstr_err(MSH_VERSION": exit: too many arguments\n", 1));
