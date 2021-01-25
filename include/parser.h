@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 12:13:09 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/25 15:50:25 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 18:36:26 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,6 @@ void			proc_ps_get_params(t_parser *parser);
 void			proc_ps_get_stdin(t_parser *parser);
 void			proc_ps_get_stdout(t_parser *parser);
 void			proc_ps_get_stdout_append(t_parser *parser);
-int				touch_old_stdout(t_command *cmd);
+int				touch_new_stdout(t_command *cmd);
 
 #endif
