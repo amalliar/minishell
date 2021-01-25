@@ -32,7 +32,7 @@ const t_builtin		*check_builtin(char *command)
 	int i;
 
 	i = 0;
-	while (g_builtins[i].name)
+	while (command && g_builtins[i].name)
 	{
 		if (!ft_strcmp(g_builtins[i].name, command))
 			return (&(g_builtins[i]));

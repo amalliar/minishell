@@ -17,9 +17,10 @@
 #include <string.h>
 #include "prompt_tools.h"
 
-char			*g_msh_prompt = NULL;
+static char		*g_msh_prompt = NULL;
 
-void set_prompt(char *new_prompt) {
+void			set_prompt(char *new_prompt)
+{
 	char	*new_prompt_dup;
 
 	if (!(new_prompt_dup = ft_strdup(new_prompt)))
@@ -29,7 +30,8 @@ void set_prompt(char *new_prompt) {
 	g_msh_prompt = new_prompt_dup;
 }
 
-char *get_prompt(void) {
+char			*get_prompt(void)
+{
 	if (g_msh_prompt)
 		return (g_msh_prompt);
 	exit_failure(MSH_VERSION": g_msh_prompt not set\n");

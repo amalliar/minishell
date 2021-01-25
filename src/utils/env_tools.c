@@ -15,12 +15,11 @@
 #include <error_tools.h>
 #include <other_tools.h>
 #include <ft_ctype.h>
-#include <env_tools.h>
+#include "env_tools.h"
 
 char **g_environ;
 int g_ret;
 static int g_initialized = 0;
-
 
 static int		copy_env(int expand)
 {
@@ -56,7 +55,7 @@ int				init_environ(void)
 	return (g_initialized);
 }
 
-static char		**findenv(const char *name)
+char			**findenv(const char *name)
 {
 	size_t		namelen;
 	char		**envp;
@@ -75,35 +74,6 @@ static char		**findenv(const char *name)
 	return (0);
 }
 
-char			*ft_getenv(const char *name)
-{
-	char **env;
-	char *val;
-
-	init_environ();
-	if(!name || !*name)
-		return (NULL);
-	if(!ft_strcmp(name, "?"))
-		return ft_itoa(g_ret, 10);
-	if (!(env = findenv(name)))
-		return (NULL);
-	val = ft_strchr(*env, '=') + 1;
-	return (val);
-}
-
-int				ft_unsetenv(const char *name)
-{
-	char **envp;
-
-	init_environ();
-	if (!(envp = findenv(name)))
-		return (0);
-	free(*envp);
-	while ((envp[0] = envp[1]))
-		envp++;
-	return (1);
-}
-
 char			*ft_putenv(const char *string)
 {
 	size_t	envlen;
@@ -118,18 +88,18 @@ char			*ft_putenv(const char *string)
 	return (g_environ[envlen] = ft_strdup(string));
 }
 
-char			*ft_setenv(const char *name, const char *value)
+char			*ft_getenv(const char *name)
 {
-	char *tmp;
-	char *ret;
+	char **env;
+	char *val;
 
 	init_environ();
-	msg_assert(value, "Pointers are NULL");
-	if (!(name = ft_strjoin(name, "=")))
-		return (0);
-	tmp = ft_strjoin(name, value);
-	ret = ft_putenv(tmp);
-	free(tmp);
-	free((char *)name);
-	return (ret);
+	if (!name || !*name)
+		return (NULL);
+	if (!ft_strcmp(name, "?"))
+		return (ft_itoa(g_ret, 10));
+	if (!(env = findenv(name)))
+		return (NULL);
+	val = ft_strchr(*env, '=') + 1;
+	return (val);
 }

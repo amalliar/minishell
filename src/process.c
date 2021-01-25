@@ -64,9 +64,11 @@ int				child(const t_command *cmd, int *pipefd, bool run_fork)
 	if (run_fork)
 		set_default_signals();
 	configure_redirection(cmd, pipefd);
-	if (check_builtin(cmd->name))
+	if (!cmd->params)
+		ret = 0;
+	else if (check_builtin(cmd->name))
 		ret = run_builtin(cmd->name, cmd->params, g_environ);
-	else if(!ft_strchr(cmd->name, '/'))
+	else if (!ft_strchr(cmd->name, '/'))
 	{
 		putstr_err("bash: ", 1) && putstr_err(cmd->name, 1);
 		ret = putstr_err(": command not found\n", 127);
@@ -127,11 +129,8 @@ int				process(const t_list *commands)
 	save_fd(std_fds);
 	while (commands && (cmd = commands->content))
 	{
-		if(!cmd->params)
-			break;
 		pid = 0;
-		run_fork = cmd->pipe || g_prev_pipe || !check_builtin(cmd->name);
-		if (run_fork)
+		if ((run_fork = cmd->pipe || g_prev_pipe || !check_builtin(cmd->name)))
 		{
 			if (cmd->pipe)
 				error_check(pipe(pipefd), "pipe");
@@ -146,7 +145,3 @@ int				process(const t_list *commands)
 	}
 	return (1);
 }
-
-//TODO: cd ""
-//TODO: exit change when Ctrl+D
-//TODO: Ctrl+\ change new line

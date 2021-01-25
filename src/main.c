@@ -42,6 +42,7 @@ int				main(void)
 	t_token		*token_list;
 	t_list		*command_list;
 
+	init_environ();
 	set_bash_signals();
 	set_prompt(MSH_VERSION"$ ");
 	while (1)

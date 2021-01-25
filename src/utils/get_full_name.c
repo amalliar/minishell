@@ -18,7 +18,7 @@
 #include <other_tools.h>
 #include <builtin.h>
 
-bool			file_exists(char *filename)
+bool				file_exists(char *filename)
 {
 	struct stat		buffer;
 
