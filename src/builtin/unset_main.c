@@ -37,7 +37,7 @@ int			bi_unset(int argc, char **argv, char **envp)
 		{
 			putstr_err("unset: ", 1);
 			putstr_err(argv[it++], 1);
-			putstr_err(": not a valid identifier", 1);
+			putstr_err(": not a valid identifier\n", 1);
 			continue;
 		}
 		ft_unsetenv(argv[it]);
