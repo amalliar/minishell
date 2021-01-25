@@ -6,12 +6,12 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 08:29:02 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/19 08:29:09 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 17:49:13 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MSH_H
 # define MSH_H
-# define MSH_VERSION "msh-0.1"
+# define MSH_VERSION "msh-1.0"
 
 #endif

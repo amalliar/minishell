@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/14 03:33:51 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/25 12:55:49 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 17:50:38 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ static void		read_loop_except(int ret)
 	if (ret == 0)
 	{
 		// TODO: replace with msh_exit built-in.
-		ft_printf("\nexit\n");
+		ft_printf("exit\n");
 		exit(EXIT_SUCCESS);
 	}
 	exit_failure(MSH_VERSION": %s\n", strerror(errno));
 }
 
-int				main(int argc, char **argv, char **envp)
+int				main(void)
 {
 	int			ret;
 	char		*line;

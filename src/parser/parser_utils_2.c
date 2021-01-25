@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 12:25:05 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/25 12:25:32 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 15:22:30 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,13 @@ int				touch_old_stdout(t_command *cmd)
 	}
 	close(fd);
 	return (0);
+}
+
+void			parser_init(t_parser *parser, t_token *token_list)
+{
+	parser->state = PS_GET_NAME;
+	parser->params_idx = 0;
+	parser->cmd_current = alloc_new_command();
+	parser->cmd_list = parser->cmd_current;
+	parser->tok_current = token_list;
 }

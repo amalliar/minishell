@@ -6,26 +6,26 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 08:29:18 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/24 15:37:30 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 16:07:44 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
 
-#include <stdlib.h>
-#include <stddef.h>
-#include <string.h>
-#include <errno.h>
+# include <stdlib.h>
+# include <stddef.h>
+# include <string.h>
+# include <errno.h>
 
-#include "msh.h"
-#include "ft_string.h"
-#include "ft_stdio.h"
-#include "env_tools.h"
-#include "error_tools.h"
-#include "other_tools.h"
+# include "msh.h"
+# include "ft_string.h"
+# include "ft_stdio.h"
+# include "env_tools.h"
+# include "error_tools.h"
+# include "other_tools.h"
 
-enum					e_lexer_states
+enum				e_lexer_states
 {
 	LS_NORMAL,
 	LS_IN_QUOTES,
@@ -33,7 +33,7 @@ enum					e_lexer_states
 	LS_RETURN_RES
 };
 
-enum					e_token_types
+enum				e_token_types
 {
 	TT_PIPE = '|',
 	TT_LEFT_AB = '<',
@@ -43,31 +43,32 @@ enum					e_token_types
 	TT_NULL = 0
 };
 
-typedef struct			s_token
+typedef struct		s_token
 {
-	char				*data;
-	int					type;
-	struct s_token		*next;
-}						t_token;
+	char			*data;
+	int				type;
+	struct s_token	*next;
+}					t_token;
 
-typedef struct			s_lexer
+typedef struct		s_lexer
 {
-	int					state;
-	int					line_idx;
-	int					tok_idx;
-	int					tok_size;
-	t_token				*tok_current;
-	char				**line;
-}						t_lexer;
+	int				state;
+	int				line_idx;
+	int				tok_idx;
+	int				tok_size;
+	t_token			*tok_current;
+	char			**line;
+}					t_lexer;
 
-t_token					*alloc_new_token(size_t size);
-t_token					*lexer_proc(char **line);
-void					lexer_init(t_lexer *lexer, char **line);
-void					lexer_clear(t_token *token_list);
-void					finish_current_token(t_lexer *lexer);
-void					cut_processed_part(t_lexer *lexer);
-void					env_substitute(t_lexer *lexer);
-void					proc_ls_normal_2(t_lexer *lexer, t_token **tok_list, char c);
-void					proc_ls_normal_3(t_lexer *lexer, char c);
+t_token				*alloc_new_token(size_t size);
+t_token				*lexer_proc(char **line);
+void				lexer_init(t_lexer *lexer, char **line);
+void				lexer_clear(t_token *token_list);
+void				finish_current_token(t_lexer *lexer);
+void				cut_processed_part(t_lexer *lexer);
+void				env_substitute(t_lexer *lexer);
+void				proc_ls_normal_2(t_lexer *lexer, t_token **tok_list, \
+						char c);
+void				proc_ls_normal_3(t_lexer *lexer, char c);
 
 #endif
