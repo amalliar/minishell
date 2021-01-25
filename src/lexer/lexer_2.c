@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/24 15:36:30 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/25 19:25:17 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 21:20:44 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,16 @@ void			proc_ls_normal_3(t_lexer *lexer, char c)
 		if (lexer->tok_current->type != TT_WORD)
 			finish_current_token(lexer);
 	}
+	else if (c == '$')
+	{
+		if (lexer->tok_current->type != TT_WORD)
+			finish_current_token(lexer);
+		lexer->tok_current->type = TT_WORD;
+		++lexer->line_idx;
+		env_substitute(lexer);
+	}
 	else if (c == ' ' || c == '\t')
 		finish_current_token(lexer);
-	else if (c == '\\')
-		(lexer->tok_current->data)[lexer->tok_idx++] = \
-			(*lexer->line)[++lexer->line_idx];
 	else
 	{
 		if (lexer->tok_current->type != TT_WORD)
