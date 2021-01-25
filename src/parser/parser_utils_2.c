@@ -6,13 +6,13 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 12:25:05 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/25 15:22:30 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 18:36:15 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-int				touch_old_stdout(t_command *cmd)
+int				touch_new_stdout(t_command *cmd)
 {
 	int		flag;
 	int		fd;
