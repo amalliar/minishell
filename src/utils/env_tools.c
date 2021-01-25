@@ -67,7 +67,8 @@ char			**findenv(const char *name)
 	envp = g_environ;
 	while (envp && *envp != NULL)
 	{
-		if (!ft_strncmp(name, *envp, namelen))
+		if (!ft_strncmp(name, *envp, namelen) &&
+		((*envp)[namelen] == '\0' || (*envp)[namelen] == '='))
 			return (envp);
 		envp++;
 	}
