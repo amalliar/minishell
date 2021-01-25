@@ -6,7 +6,7 @@
 #    By: amalliar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/09 23:55:29 by amalliar          #+#    #+#              #
-#    Updated: 2021/01/25 12:26:01 by amalliar         ###   ########.fr        #
+#    Updated: 2021/01/25 16:16:10 by amalliar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,16 +43,22 @@ UTILS_SRCS := error_tools.c \
               handlers.c
 UTILS_SRCS := $(addprefix utils/, $(UTILS_SRCS))
 
-SRCS       := main.c \
-              process.c \
-              lexer.c \
+LEXER_SRCS := lexer.c \
               lexer_2.c \
 	      lexer_utils.c \
-	      lexer_utils_2.c \
-              parser.c \
+	      lexer_utils_2.c
+LEXER_SRCS := $(addprefix lexer/, $(LEXER_SRCS))
+
+PARSER_SRCS:= parser.c \
+              parser_2.c \
+              parser_3.c \
               parser_utils.c \
               parser_utils_2.c
-SRCS       := $(SRCS) $(UTILS_SRCS) $(BUILTIN_SRCS)
+PARSER_SRCS := $(addprefix parser/, $(PARSER_SRCS))
+
+SRCS       := main.c \
+              process.c
+SRCS       := $(SRCS) $(LEXER_SRCS) $(PARSER_SRCS) $(UTILS_SRCS) $(BUILTIN_SRCS)
 SRCS       := $(addprefix src/, $(SRCS))
 
 OBJS       := $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)

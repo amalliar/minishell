@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/24 12:20:29 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/25 12:42:47 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 16:06:07 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,9 @@ void			env_substitute(t_lexer *lexer)
 			expand_token(lexer, eval);
 	}
 	free(evar);
-	--lexer->line_idx;  // decrement by one to account for outer while loop increment.
+	--lexer->line_idx;
 }
+
+/*
+** ^^^^ Decrement by one to account for outer while loop increment.
+*/
