@@ -150,7 +150,6 @@ t_list			*parser_proc(t_token *token_list)
 				break ;
 			}
 		}
-
 		else if (parser_state == PS_GET_PARAMS)
 		{
 			if (token_list->type == TT_WORD)
@@ -178,7 +177,6 @@ t_list			*parser_proc(t_token *token_list)
 				params_idx = 0;
 			}
 		}
-
 		else if (parser_state == PS_GET_STDIN)
 		{
 			if (token_list->type == TT_WORD)
@@ -202,7 +200,6 @@ t_list			*parser_proc(t_token *token_list)
 			else if (token_list->type == TT_PIPE)
 				break ;
 		}
-
 		else if (parser_state == PS_GET_STDOUT)
 		{
 			if (token_list->type == TT_WORD)
@@ -234,7 +231,6 @@ t_list			*parser_proc(t_token *token_list)
 			else if (token_list->type == TT_PIPE)
 				break ;
 		}
-
 		else if (parser_state == PS_GET_STDOUT_APPEND)
 		{
 			if (token_list->type == TT_WORD)
@@ -272,7 +268,6 @@ t_list			*parser_proc(t_token *token_list)
 			else if (token_list->type == TT_PIPE)
 				break ;
 		}
-
 		token_list = token_list->next;
 	}
 	if (parser_state != PS_GET_NAME && parser_state != PS_GET_PARAMS)

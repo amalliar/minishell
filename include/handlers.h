@@ -14,5 +14,6 @@
 # define HANDLERS_H
 
 void	sigint_h(int n);
+void	sigint_h_2(int n);
 
 #endif

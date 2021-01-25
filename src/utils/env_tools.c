@@ -18,7 +18,9 @@
 #include <env_tools.h>
 
 char **g_environ;
+int g_ret;
 static int g_initialized = 0;
+
 
 static int		copy_env(int expand)
 {
@@ -81,6 +83,8 @@ char			*ft_getenv(const char *name)
 	init_environ();
 	if(!name || !*name)
 		return (NULL);
+	if(!ft_strcmp(name, "?"))
+		return ft_itoa(g_ret, 10);
 	if (!(env = findenv(name)))
 		return (NULL);
 	val = ft_strchr(*env, '=') + 1;

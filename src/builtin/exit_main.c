@@ -15,14 +15,14 @@
 #include <ft_string.h>
 #include <ft_stdlib.h>
 
-extern unsigned char g_question;
+extern int g_ret;
 
 int		bi_exit(int argc, char **argv, char **envp)
 {
 	(void)envp;
 	ft_putstr_fd("exit\n", STDERR_FILENO);
 	if (argc == 1)
-		exit(g_question);
+		exit(g_ret);
 	if (!ft_strisnumeric(argv[1]))
 	{
 		ft_putstr_fd("bash: exit: ", STDERR_FILENO);

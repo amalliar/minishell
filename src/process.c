@@ -24,7 +24,7 @@
 #include "handlers.h"
 
 static int g_prev_pipe;
-unsigned char g_question;
+extern int g_ret;
 
 static void		configure_redirection(const t_command *command, int *pipefd)
 {
@@ -69,6 +69,14 @@ int				child(const t_command *cmd, int *pipefd, bool run_fork)
 	return (ret);
 }
 
+static int  interpret_status(int status)
+{
+	if (WIFEXITED(status) && !WEXITSTATUS(status))
+		g_ret = 0;
+	else if (WIFEXITED(status) && WEXITSTATUS(status))
+		g_ret = WEXITSTATUS(status);
+}
+
 int				parent(const t_command *command, int *pipefd, pid_t pid)
 {
 	static pid_t	pids[1024];
@@ -87,14 +95,15 @@ int				parent(const t_command *command, int *pipefd, pid_t pid)
 		return (EXIT_SUCCESS);
 	}
 	it = 0;
-	signal(SIGINT, SIG_IGN);
-	while (it < pid_it)
-		waitpid(pids[it++], &status, 0);
+	signal(SIGINT, sigint_h_2);
+	while (it < pid_it && waitpid(pids[it++], &status, 0))
+		interpret_status(status);
 	signal(SIGINT, sigint_h);
 	pid_it = 0;
 	ft_memset(pids, 0, sizeof(pids));
-	return (g_question = status);
+	return (status);
 }
+
 
 
 int				process(const t_list *commands)
@@ -117,7 +126,7 @@ int				process(const t_list *commands)
 			error_check(pid = fork(), "fork");
 		}
 		if (pid == 0)
-			child(cmd, pipefd, run_fork);
+			g_ret = child(cmd, pipefd, run_fork);
 		if (pid > 0)
 			parent(cmd, pipefd, pid);
 		load_fd(std_fds);

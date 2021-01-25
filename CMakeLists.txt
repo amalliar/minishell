@@ -4,11 +4,25 @@ project(cmsh C)
 set(CMAKE_C_STANDARD 99)
 
 add_executable(cmsh src/main.c src/utils/env_tools.c src/utils/strarr_tools.c
-        src/utils/error_tools.c src/process.c src/builtin/builtin.c
-        src/builtin/echo_main.c src/builtin/env_main.c src/builtin/pwd_main.c
-        src/builtin/cd_main.c src/builtin/unset_main.c
-        src/builtin/export_main.c src/builtin/exit_main.c
-        src/lexer.c src/parser.c src/utils/exit_failure.c src/utils/get_full_name.c src/fd_tools.c src/fd_tools.h src/handlers.c src/handlers.h src/prompt_tools.c src/prompt_tools.h)
+        src/utils/error_tools.c src/process.c
+        src/builtin/builtin.c
+        src/builtin/echo_main.c
+        src/builtin/env_main.c
+        src/builtin/pwd_main.c
+        src/builtin/cd_main.c
+        src/builtin/unset_main.c
+        src/builtin/export_main.c
+        src/builtin/exit_main.c
+        src/lexer.c
+        src/lexer_2.c
+        src/lexer_utils.c
+        src/lexer_utils_2.c
+        src/parser.c
+        src/utils/exit_failure.c
+        src/utils/get_full_name.c
+        src/utils/fd_tools.c
+        src/utils/handlers.c
+        src/utils/prompt_tools.c)
 
 include_directories(libft/include include libft)
 #find_library(LIBFT_G ft "${CMAKE_SOURCE_DIR}/libft/")
