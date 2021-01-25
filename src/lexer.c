@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 18:23:55 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/24 15:39:31 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 12:55:09 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@ static void			proc_ls_normal(t_lexer *lexer, t_token **tok_list, char c)
 {
 	if (c == '$')
 	{
-		finish_current_token(lexer);
+		if (lexer->tok_current->type != TT_WORD)
+			finish_current_token(lexer);
+		lexer->tok_current->type = TT_WORD;
+		++lexer->line_idx;
 		env_substitute(lexer);
 	}
 	else if (c == '|' || c == '<')
@@ -42,8 +45,17 @@ static void			proc_ls_in_dquotes(t_lexer *lexer, char c)
 		lexer->state = LS_NORMAL;
 	else if (c == '$')
 	{
+		if (lexer->tok_current->type != TT_WORD)
+			finish_current_token(lexer);
 		lexer->tok_current->type = TT_WORD;
+		++lexer->line_idx;
 		env_substitute(lexer);
+	}
+	else if (c == '\\')
+	{
+		lexer->tok_current->type = TT_WORD;
+		(lexer->tok_current->data)[lexer->tok_idx++] = \
+			(*lexer->line)[++lexer->line_idx];
 	}
 	else
 	{
@@ -80,7 +92,7 @@ t_token				*lexer_proc(char **line)
 			proc_ls_in_dquotes(&lexer, c);
 		else if (lexer.state == LS_IN_QUOTES)
 			proc_ls_in_quotes(&lexer, c);
-		else if (lexer.state == LS_RETURN_RES)
+		if (lexer.state == LS_RETURN_RES)
 			return (tok_list);
 		++lexer.line_idx;
 	}

@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/24 12:13:29 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/24 12:18:28 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 11:25:15 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,12 @@ t_token			*alloc_new_token(size_t size)
 
 void			finish_current_token(t_lexer *lexer)
 {
-	if (lexer->tok_current->type == TT_NULL)
-		return ;
-	(lexer->tok_current->data)[lexer->tok_idx] = '\0';
-	lexer->tok_current->next = alloc_new_token(lexer->tok_size);
-	lexer->tok_current = lexer->tok_current->next;
+	if (lexer->tok_current->type != TT_NULL)
+	{
+		(lexer->tok_current->data)[lexer->tok_idx] = '\0';
+		lexer->tok_current->next = alloc_new_token(lexer->tok_size);
+		lexer->tok_current = lexer->tok_current->next;
+	}
 	lexer->tok_idx = 0;
 }
 

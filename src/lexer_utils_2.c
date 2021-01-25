@@ -6,37 +6,11 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/24 12:20:29 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/24 16:51:35 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 12:42:47 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
-
-static void		append_tokens(t_lexer *lexer, char **word_list)
-{
-	if (lexer->tok_current->type == TT_NULL && *word_list)
-	{
-		free(lexer->tok_current->data);
-		if (!(lexer->tok_current->data = ft_strdup(*word_list++)))
-			exit_failure(MSH_VERSION": %s\n", strerror(errno));
-		lexer->tok_current->type = TT_WORD;
-	}
-	while (*word_list)
-	{
-		lexer->tok_size = ft_strlen(*word_list) + 1;
-		lexer->tok_current->next = alloc_new_token(lexer->tok_size);
-		lexer->tok_current = lexer->tok_current->next;
-		ft_memcpy(lexer->tok_current->data, *word_list++, lexer->tok_size);
-		lexer->tok_current->type = TT_WORD;
-	}
-	if (lexer->tok_current->type != TT_NULL)
-	{
-		lexer->tok_current->next = \
-			alloc_new_token(ft_strlen(*lexer->line - lexer->line_idx));
-		lexer->tok_current = lexer->tok_current->next;
-	}
-	lexer->tok_idx = 0;
-}
 
 static void		expand_token(t_lexer *lexer, char *word)
 {
@@ -51,10 +25,30 @@ static void		expand_token(t_lexer *lexer, char *word)
 	if (!(buff = malloc(buff_size)))
 		exit_failure(MSH_VERSION": %s\n", strerror(errno));
 	ft_memcpy(buff, lexer->tok_current->data, lexer->tok_idx);
-	ft_memcpy(buff + lexer->tok_idx, word, word_len);
+	ft_memcpy(buff + lexer->tok_idx, word, word_len + 1);
 	free(lexer->tok_current->data);
 	lexer->tok_current->data = buff;
+	lexer->tok_current->type = TT_WORD;
 	lexer->tok_idx += word_len;
+}
+
+static void		append_tokens(t_lexer *lexer, char **word_list)
+{
+	int		word_len;
+
+	if (*word_list && (lexer->tok_current->type == TT_WORD || \
+		lexer->tok_current->type == TT_NULL))
+		expand_token(lexer, *word_list++);
+	while (*word_list)
+	{
+		word_len = ft_strlen(*word_list);
+		lexer->tok_size = ft_strlen(*lexer->line) + word_len + 1;
+		lexer->tok_current->next = alloc_new_token(lexer->tok_size);
+		lexer->tok_current = lexer->tok_current->next;
+		lexer->tok_current->type = TT_WORD;
+		lexer->tok_idx = word_len;
+		ft_memcpy(lexer->tok_current->data, *word_list++, word_len + 1);
+	}
 }
 
 static char		*get_evar_name(t_lexer *lexer)
@@ -64,8 +58,7 @@ static char		*get_evar_name(t_lexer *lexer)
 	int		evar_size;
 	int		evar_idx;
 
-	++lexer->line_idx;
-	evar_size = ft_strlen(*lexer->line) + lexer->line_idx + 1;
+	evar_size = ft_strlen(*lexer->line) + 1;
 	if (!(evar = malloc(evar_size)))
 		exit_failure(MSH_VERSION": %s\n", strerror(errno));
 	evar_idx = 0;
@@ -106,5 +99,5 @@ void			env_substitute(t_lexer *lexer)
 			expand_token(lexer, eval);
 	}
 	free(evar);
-	--lexer->line_idx;
+	--lexer->line_idx;  // decrement by one to account for outer while loop increment.
 }
