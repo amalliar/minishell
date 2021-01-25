@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 12:17:52 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/25 12:20:44 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 20:36:19 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,12 @@ char			*get_unexpected_token(int token_type)
 		return (">");
 	else if (token_type == TT_RIGHT_DAB)
 		return (">>");
-	else
+	else if (token_type == TT_NULL)
+		return ("newline");
+	else if (token_type == TT_PIPE)
 		return ("|");
+	else
+		return ("");
 }
 
 static void		cmd_destroy(void *cmd_)
