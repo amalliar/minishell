@@ -6,11 +6,25 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 15:23:15 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/25 15:34:17 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 19:35:23 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+
+static void		proc_pipe(t_parser *parser)
+{
+	if (parser->tok_current->next->type == TT_NULL)
+	{
+		parser->state = PS_PARSE_ERROR;
+		return ;
+	}
+	((t_command *)parser->cmd_current->content)->pipe = 1;
+	parser->cmd_current->next = alloc_new_command();
+	parser->cmd_current = parser->cmd_current->next;
+	parser->state = PS_GET_NAME;
+	parser->params_idx = 0;
+}
 
 void			proc_ps_get_name(t_parser *parser)
 {
@@ -34,21 +48,7 @@ void			proc_ps_get_name(t_parser *parser)
 	else if (parser->tok_current->type == TT_RIGHT_DAB)
 		parser->state = PS_GET_STDOUT_APPEND;
 	else if (parser->tok_current->type == TT_PIPE)
-		parser->state = PS_PARSE_ERROR;
-}
-
-static void		proc_pipe(t_parser *parser)
-{
-	if (parser->tok_current->next->type == TT_NULL)
-	{
-		parser->state = PS_PARSE_ERROR;
-		return ;
-	}
-	((t_command *)parser->cmd_current->content)->pipe = 1;
-	parser->cmd_current->next = alloc_new_command();
-	parser->cmd_current = parser->cmd_current->next;
-	parser->state = PS_GET_NAME;
-	parser->params_idx = 0;
+		proc_pipe(parser);
 }
 
 void			proc_ps_get_params(t_parser *parser)

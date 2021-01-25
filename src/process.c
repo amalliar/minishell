@@ -6,7 +6,7 @@
 /*   By: sbashir <mi243@ya.tu>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/02 03:37:20 by sbashir           #+#    #+#             */
-/*   Updated: 2021/01/02 03:37:25 by sbashir          ###   ########.fr       */
+/*   Updated: 2021/01/25 19:58:55 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <errno.h>
 #include "fd_tools.h"
 #include "handlers.h"
+#include "msh.h"
 
 static int g_prev_pipe;
 extern int g_ret;
@@ -37,7 +38,7 @@ static void		configure_redirection(const t_command *command, int *pipefd)
 		dup2move(g_prev_pipe, 0);
 	if (command->pipe)
 	{
-		error_check(close(pipefd[0]), "bash: close");
+		error_check(close(pipefd[0]), MSH_VERSION": close");
 		dup2move(pipefd[1], 1);
 	}
 	if (command->f_stdout || command->f_stdout_append)
@@ -70,7 +71,7 @@ int				child(const t_command *cmd, int *pipefd, bool run_fork)
 		ret = run_builtin(cmd->name, cmd->params, g_environ);
 	else if (!ft_strchr(cmd->name, '/'))
 	{
-		putstr_err("bash: ", 1) && putstr_err(cmd->name, 1);
+		putstr_err(MSH_VERSION": ", 1) && putstr_err(cmd->name, 1);
 		ret = putstr_err(": command not found\n", 127);
 	}
 	else if ((ret = execve(cmd->name, cmd->params, g_environ)) == -1)
@@ -104,7 +105,7 @@ int				parent(const t_command *command, int *pipefd, pid_t pid)
 	pids[pid_it++] = pid;
 	if (command->pipe)
 	{
-		error_check(close(pipefd[1]), "bash: close");
+		error_check(close(pipefd[1]), MSH_VERSION": close");
 		g_prev_pipe = pipefd[0];
 		return (EXIT_SUCCESS);
 	}

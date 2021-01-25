@@ -6,7 +6,7 @@
 /*   By: sbashir <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/24 12:35:09 by sbashir           #+#    #+#             */
-/*   Updated: 2021/01/24 12:35:11 by sbashir          ###   ########.fr       */
+/*   Updated: 2021/01/25 19:53:14 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <error_tools.h>
 #include <other_tools.h>
 #include <builtin.h>
+#include "msh.h"
 
 bool				file_exists(char *filename)
 {
@@ -37,11 +38,11 @@ static char			*find_in_path(char *bin_name)
 	if (!path)
 		return (NULL);
 	splitted = ft_split(path, ":");
-	msg_assert(walker = splitted, "bash: bad allocation");
+	msg_assert(walker = splitted, MSH_VERSION": bad allocation");
 	while (walker && *walker)
 	{
-		msg_assert(tmp2 = ft_strjoin(*walker, "/"), "bash: bad allocation");
-		msg_assert(tmp = ft_strjoin(tmp2, bin_name), "bash: bad allocation");
+		msg_assert(tmp2 = ft_strjoin(*walker, "/"), MSH_VERSION": bad allocation");
+		msg_assert(tmp = ft_strjoin(tmp2, bin_name), MSH_VERSION": bad allocation");
 		free(tmp2);
 		if (file_exists(tmp))
 			break ;
