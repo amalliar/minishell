@@ -6,7 +6,7 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/25 10:01:30 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/25 17:13:27 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 20:15:59 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,7 @@ int				ft_get_next_line(int fd, char **line)
 	ret = get_cache_line(cache, fd, line);
 	if (ret != 0)
 	{
-		if (ret == -1)
-			free_buffers(cache, line);
+		(ret == -1) ? free_buffers(cache, line) : 0;
 		return (ret);
 	}
 	ft_memset(buffer, 0, BUFFER_SIZE + 1);

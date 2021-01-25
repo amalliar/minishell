@@ -6,15 +6,11 @@
 /*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 06:23:19 by amalliar          #+#    #+#             */
-/*   Updated: 2021/01/25 16:08:35 by amalliar         ###   ########.fr       */
+/*   Updated: 2021/01/25 18:30:22 by amalliar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
-
-/*
-** Fix segfault for empty commands (redirects): > /dev/null
-*/
 
 static void		parser_check_error(t_parser *parser)
 {
