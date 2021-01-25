@@ -16,11 +16,11 @@
 #include <ft_string.h>
 #include "msh.h"
 
-int				bi_cd(int argc, char **argv, char **envp)
+int				bi_cd(int argc, char **argv)
 {
 	char		*path;
+	char		*cur_path;
 
-	(void)envp;
 	if (argc > 2)
 		return (putstr_err(MSH_VERSION": cd: too many arguments\n", 1));
 	else if (argc == 1)
@@ -30,12 +30,15 @@ int				bi_cd(int argc, char **argv, char **envp)
 	}
 	else
 		path = argv[1];
+	msg_assert(cur_path = getcwd(NULL, 0), "getcwd error");
 	if (chdir(path) == -1)
 	{
+		free(cur_path);
 		ft_perror(path);
 		return (EXIT_FAILURE);
 	}
-	ft_setenv("OLDPWD", ft_getenv("PWD"));
+	ft_setenv("OLDPWD", cur_path);
+	free(cur_path);
 	msg_assert(path = getcwd(NULL, 0), "getcwd error");
 	ft_setenv("PWD", path);
 	free(path);

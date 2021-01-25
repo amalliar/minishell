@@ -16,12 +16,12 @@
 typedef struct	s_builtin
 {
 	char		*name;
-	int			(*func)(int, char**, char**);
+	int			(*func)();
 }				t_builtin;
 
 const t_builtin *check_builtin(char *command);
 int				run_builtin(char *command, char **argv, char **envp);
-int				bi_cd(int argc, char **argv, char **envp);
+int				bi_cd(int argc, char **argv);
 int				bi_pwd(int argc, char **argv, char **envp);
 int				bi_env(int argc, char **argv, char **envp);
 int				bi_exit(int argc, char **argv, char **envp);
